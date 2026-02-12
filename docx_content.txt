@@ -1,0 +1,80 @@
+
+Website Development Requirement Document
+1. Project Overview
+This website will provide multiple services including Pick &amp; Drop booking, Ziyarat packages, Khajoor (dates) services, Islamic book store via Salla e-commerce integration, and Donation collection for Ramadan and Sadaqah purposes.
+2. Core Services Modules
+2.1 Pick &amp; Drop Booking Service
+User will be able to book transport services using an online form.
+Required Form Fields:
+- Full Name
+- Mobile Number
+- WhatsApp Number
+- Pickup Location
+- Drop Location
+- Date &amp; Time
+- Passengers Count
+- Vehicle Type (Optional)
+- Notes
+2.2 Ziyarat Packages Module
+Website will display Ziyarat packages with details and booking inquiry form.
+Package Information:
+- Package Name
+- City
+- Duration
+- Price
+- Includes / Excludes
+- Itinerary Points
+- Images Gallery
+2.3 Khajoor (Dates) Services
+Khajoor products will be sold via Salla store integration.
+Website will show product categories and redirect to Salla store for purchase.
+2.4 Book Store (Salla Integration)
+Books will be sold using Salla e-commerce store. Website will include Shop menu that redirects to Salla store or product links.
+2.5 Donation Module (Ramadan / Sadaqah)
+Users can donate using preset or custom donation amounts.
+Donation Types:
+- Sadaqah
+- Zakat (Optional)
+- Ramadan Food / Iftar Donation
+- General Donation
+3. Website Pages (Sitemap)
+- Home
+- Pick &amp; Drop
+- Ziyarat Packages
+- Khajoor Services
+- Book Store (Salla)
+- Donations
+- About Us
+- Contact Us
+- FAQ
+- Terms &amp; Conditions
+- Privacy Policy
+4. Admin Panel Requirements
+- Manage Ziyarat Packages
+- View Pick &amp; Drop Bookings
+- View Inquiries
+- Manage Contact Messages
+- Update Basic Website Settings
+5. Technical Requirements
+Frontend Requirements:
+- Mobile Responsive Design
+- Fast Loading Speed
+- Form Validation + Anti Spam
+Backend Requirements:
+- Booking Database Storage
+- Admin Dashboard
+- Email Notification System
+Integrations:
+- Salla Store Integration
+- Google Analytics (Optional)
+- WhatsApp Chat Integration
+6. Recommended Technology Stack
+Recommended: WordPress Website + Salla Store Integration
+Alternative: Custom Development (Next.js / Laravel)
+7. Project Deliverables
+- Live Website on Domain
+- Admin Login Access
+- Salla Store Connected
+- Fully Working Forms
+- Basic SEO Setup
+- Developer Handover Training

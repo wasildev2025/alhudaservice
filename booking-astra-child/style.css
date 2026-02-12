@@ -1,0 +1,159 @@
+/*
+ Theme Name:   Booking Astra Child
+ Theme URI:    https://localhost/booking
+ Description:  Islamic-themed child theme for Astra. Gold, green, white palette.
+ Author:       Booking Project
+ Author URI:   https://localhost/booking
+ Template:     astra
+ Version:      1.0.0
+ License:      GNU General Public License v2 or later
+ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+ Text Domain:  booking-astra-child
+*/
+
+/* Islamic Color Palette */
+:root {
+  --booking-gold: #C9A227;
+  --booking-gold-light: #E5C76B;
+  --booking-gold-dark: #9A7B1A;
+  --booking-green: #006B3F;
+  --booking-green-light: #028a4f;
+  --booking-green-dark: #004d2d;
+  --booking-white: #FFFFFF;
+  --booking-cream: #F8F6F0;
+  --booking-text: #2d2d2d;
+}
+
+/* Primary accents - override Astra defaults */
+.ast-header-break-point .main-header-menu > .menu-item > .menu-link,
+.ast-builder-layout-element .ast-builder-menu a,
+a {
+  color: var(--booking-green);
+}
+a:hover {
+  color: var(--booking-gold);
+}
+
+/* Buttons - CTA style */
+.wp-block-button__link,
+.ast-button,
+.button,
+button[type="submit"],
+input[type="submit"] {
+  background-color: var(--booking-green) !important;
+  color: var(--booking-white) !important;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.wp-block-button__link:hover,
+.ast-button:hover,
+.button:hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+  background-color: var(--booking-gold) !important;
+  color: var(--booking-white) !important;
+  transform: translateY(-1px);
+}
+
+/* Hero section styling */
+.booking-hero {
+  background: linear-gradient(135deg, var(--booking-green-dark) 0%, var(--booking-green) 100%);
+  color: var(--booking-white);
+  padding: 60px 20px;
+  text-align: center;
+}
+.booking-hero h1 {
+  color: var(--booking-white);
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+.booking-hero .booking-cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+.booking-hero .booking-cta-buttons a {
+  background: var(--booking-gold);
+  color: var(--booking-white) !important;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+}
+.booking-hero .booking-cta-buttons a:hover {
+  background: var(--booking-gold-light);
+  color: var(--booking-white) !important;
+}
+
+/* Section styling */
+.booking-section {
+  padding: 48px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.booking-section.alt-bg {
+  background: var(--booking-cream);
+}
+.booking-section h2 {
+  color: var(--booking-green);
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 2rem;
+}
+
+/* Why choose us / Trust points */
+.booking-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+.booking-trust-item {
+  text-align: center;
+  padding: 24px;
+  background: var(--booking-white);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.booking-trust-item h3 {
+  color: var(--booking-green);
+  font-size: 1.25rem;
+}
+
+/* WhatsApp strip */
+.booking-whatsapp-strip {
+  background: #25D366;
+  color: white;
+  padding: 16px;
+  text-align: center;
+}
+.booking-whatsapp-strip a {
+  color: white !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Footer accent */
+.ast-footer-overlay {
+  border-top: 3px solid var(--booking-gold);
+}
+
+/* Form styling */
+.booking-form-wrap { max-width: 600px; margin: 24px 0; }
+.booking-form label { display: block; margin-top: 12px; font-weight: 600; color: var(--booking-green); }
+.booking-form input[type="text"],
+.booking-form input[type="email"],
+.booking-form input[type="tel"],
+.booking-form input[type="date"],
+.booking-form input[type="time"],
+.booking-form input[type="number"],
+.booking-form select,
+.booking-form textarea { width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #ddd; border-radius: 4px; }
+.booking-success { background: #d4edda; color: #155724; padding: 16px; border-radius: 4px; margin-bottom: 16px; }
+.booking-error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 4px; margin-bottom: 16px; }

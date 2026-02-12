@@ -1,0 +1,277 @@
+1) Project Overview
+
+1.1 Website ka Maqsad
+
+Aik single website jahan user:
+	•	Pick & Drop services book kar sake
+	•	Ziyarat packages select + inquiry/booking kar sake
+	•	Khajoor (dates) services (order/inquiry) kar sake
+	•	Book Store (e-commerce via Salla) se books buy kar sake
+	•	Ramadan Donations / Sadaqah donate kar sake
+	•	Salla Store integration se payment collection + order management ho
+
+1.2 Target Audience
+	•	Saudi/GCC visitors + Pakistan visitors
+	•	Ziyarat karne wale log, families
+	•	Khajoor buyers (gift/wholesale)
+	•	Islamic books readers
+	•	Donation donors (Ramadan campaigns)
+
+⸻
+
+2) Core Modules (Features)
+
+Module A — Pick & Drop Booking
+
+Purpose: Transport booking (airport/hotel/ziyarat pickup drop)
+
+User Flow
+	1.	User “Pick & Drop” page open kare
+	2.	Form fill kare:
+	•	Pickup location (Google map link / text)
+	•	Drop location
+	•	Date & time
+	•	Passengers count
+	•	Luggage (yes/no)
+	•	Vehicle type (Sedan/Van/Hiace) (optional)
+	•	Contact: Name, Mobile, WhatsApp
+	3.	Submit → “Booking Request Received” message
+	4.	Admin ko notification (Email/WhatsApp optional)
+	5.	Admin status set kare: Pending / Confirmed / Completed / Cancelled
+
+Developer Requirements
+	•	Booking form + database saving
+	•	Admin panel/listing
+	•	Auto confirmation email/SMS optional
+	•	WhatsApp “Click to chat” button: prefilled message with booking details
+
+⸻
+
+Module B — Ziyarat Packages
+
+Purpose: Packages listing + booking/inquiry
+
+Package Fields (Admin add kare)
+	•	Package name (e.g., Makkah Ziyarat – Half Day)
+	•	City (Makkah/Madinah/Taif/Badr etc.)
+	•	Duration (hours/days)
+	•	Price (per person / per group) + currency
+	•	Includes (transport, guide, refreshments)
+	•	Excludes
+	•	Itinerary points (bullet list)
+	•	Pickup point rules
+	•	Images (gallery)
+	•	Availability notes
+
+User Flow
+	1.	User Packages page → package open kare
+	2.	“Book Now / Inquiry” button
+	3.	Form:
+	•	Package selected (auto)
+	•	Date
+	•	Persons
+	•	Pickup location
+	•	Contact details
+	4.	Submit → admin notification
+
+Optional Upgrade
+	•	Online payment (advance payment) via Salla “payment link / product” approach (agar aap chahen)
+
+⸻
+
+Module C — Khajoor Services
+
+Purpose: Dates (khajoor) selling + services (gift packing, bulk, delivery)
+
+Options
+	•	Option 1 (Recommended): Khajoor products Salla store me (inventory, payment, shipping Salla handle kare)
+	•	Website par: “Khajoor” page with categories + “Buy on Store” buttons that open Salla product pages
+
+Content Sections
+	•	Categories (Ajwa, Safawi, Mabroom etc.)
+	•	Bulk order inquiry form
+	•	Gift box inquiry
+	•	Delivery cities supported
+
+⸻
+
+Module D — Book Store (Salla E-commerce)
+
+Purpose: Books selling + payment collection
+
+Integration Approaches (Developer choose kare)
+	•	Approach 1 (Simple & Fast): Website menu me “Shop” → Salla store link (subdomain: store.yourdomain.com OR salla URL)
+	•	Approach 2 (Semi-Embedded): Selected products “Buy Now” buttons on website → Salla product/cart
+	•	Approach 3 (Advanced): Headless style (only if Salla APIs available & budget higher)
+
+Recommended: Approach 1 + Approach 2 (fast, stable, low cost)
+
+⸻
+
+Module E — Donations (Ramadan / Sadaqah)
+
+Purpose: Donation collection with clear purpose & transparency
+
+Donation Types (Website)
+	•	Sadaqah
+	•	Zakat (optional)
+	•	Ramadan Iftar sponsorship (optional)
+	•	“General Donation”
+
+User Flow
+	1.	Donation page → amount select (50/100/200/custom)
+	2.	Donor details (optional): name, phone, note/dua request
+	3.	Payment method:
+	•	Option A (Recommended): Salla donation product (amount variants) OR payment link
+	•	Option B: External payment gateway (if available)
+	4.	Success page + receipt message
+
+Admin Needs
+	•	Donation records export (CSV)
+	•	“Campaign progress” counter (manual/auto)
+
+⸻
+
+3) Website Pages (Sitemap)
+
+Main Pages
+	1.	Home
+	2.	Pick & Drop
+	3.	Ziyarat Packages
+	4.	Khajoor
+	5.	Book Store (Salla)
+	6.	Donations
+	7.	About Us
+	8.	Contact Us
+	9.	FAQ
+	10.	Terms & Conditions
+	11.	Privacy Policy
+
+Home Page Sections
+	•	Hero banner + CTA buttons (Book Pick&Drop / View Packages / Shop / Donate)
+	•	Featured packages
+	•	Featured products (khajoor/books) with “Buy” links
+	•	Why choose us (trust points)
+	•	Testimonials
+	•	WhatsApp contact strip
+	•	Footer (quick links + social)
+
+⸻
+
+4) Admin Panel Requirements
+
+Admin ko ye manage karna hoga:
+	•	Packages CRUD (add/edit/delete)
+	•	Pick&Drop bookings list + status
+	•	Ziyarat inquiries list + status
+	•	Bulk khajoor inquiry list
+	•	Contact form messages
+	•	Basic settings: phone, WhatsApp number, email, working hours
+	•	Homepage featured items (manual select)
+
+⸻
+
+5) Design & Branding Requirements
+	•	Language: Urdu + English (optional) / Roman Urdu (optional)
+	•	Mobile-first design
+	•	Islamic clean theme (gold/green/white optional)
+	•	CTA buttons very clear
+	•	WhatsApp floating button on all pages
+	•	Fast loading + SEO friendly
+
+⸻
+
+6) Technical Requirements (Developer Checklist)
+
+Frontend
+	•	Responsive (mobile/tablet/desktop)
+	•	Forms validation + anti-spam (reCAPTCHA)
+	•	Speed optimization (cache + optimized images)
+
+Backend
+	•	Database for bookings/inquiries (or email-only if budget low)
+	•	Admin dashboard
+	•	Email notifications + optional WhatsApp integration
+
+Integrations
+	•	Salla store link/subdomain setup
+	•	Analytics: Google Analytics / Meta Pixel (optional)
+	•	Google Maps link on pickup/drop (optional)
+
+Security
+	•	SSL (https)
+	•	Backup schedule
+	•	Basic firewall plugin (if WordPress)
+
+⸻
+
+7) Booking/Inquiry Form Fields (Exact)
+
+Pick & Drop Form
+	•	Full Name
+	•	Mobile
+	•	WhatsApp (same as mobile yes/no)
+	•	Pickup Location
+	•	Drop Location
+	•	Date
+	•	Time
+	•	Passengers
+	•	Vehicle Type (optional)
+	•	Notes
+
+Ziyarat Package Form
+	•	Package (dropdown)
+	•	Date
+	•	Persons
+	•	Pickup Location
+	•	Full Name
+	•	Mobile/WhatsApp
+	•	Notes
+
+Bulk Khajoor Inquiry
+	•	Required type (Ajwa etc.)
+	•	Quantity (kg/boxes)
+	•	Delivery city
+	•	Full Name
+	•	Phone/WhatsApp
+	•	Notes
+
+Contact Form
+	•	Name
+	•	Email/Phone
+	•	Message
+
+⸻
+
+8) Developer Deliverables (Final Output)
+
+Developer aap ko ye de:
+	1.	Live website on your domain
+	2.	Admin login details
+	3.	Salla store connected (Shop menu working)
+	4.	All forms working + admin dashboard list
+	5.	Email notifications working
+	6.	Basic SEO (titles/meta, sitemap, speed)
+	7.	Training: 30–60 min handover video or call
+
+⸻
+
+9) Recommended Tech Stack (Budget friendly)
+
+Option 1 (Fast & Practical): WordPress
+	•	Website on WordPress
+	•	Custom pages + forms + admin listing
+	•	Salla store as external/subdomain link
+
+Option 2 (Advanced): Custom (Next.js/Laravel)
+	•	Better scalability, more cost
+
+Recommendation: WordPress + Salla integration (best for speed + cost)
+
+⸻
+
+10) Timeline (Simple Phases)
+	1.	Phase 1: UI + pages + branding
+	2.	Phase 2: Forms + admin panel
+	3.	Phase 3: Salla integration + donation flow
+	4.	Phase 4: Testing + launch
