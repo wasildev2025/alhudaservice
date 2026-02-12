@@ -5,6 +5,8 @@
  */
 defined( 'ABSPATH' ) || exit;
 get_header();
+$salla_url = get_option( 'booking_salla_store_url', '#' );
+if ( empty( $salla_url ) ) $salla_url = '#';
 ?>
 
 <div class="booking-page-banner">
@@ -25,7 +27,7 @@ get_header();
 				<div style="font-size:3rem;margin-bottom:16px;">📚</div>
 				<h3>Islamic Books</h3>
 				<p>Quran, Hadith collections, Islamic history, children's books, and more.</p>
-				<a href="#" class="booking-btn booking-btn-outline" style="margin-top:16px;">Browse Books</a>
+				<a href="<?php echo esc_url( $salla_url ); ?>" target="_blank" class="booking-btn booking-btn-outline" style="margin-top:16px;">Browse Books</a>
 			</div>
 			<div class="booking-card" style="text-align:center;padding:48px 24px;">
 				<div style="font-size:3rem;margin-bottom:16px;">🌴</div>
@@ -37,7 +39,7 @@ get_header();
 				<div style="font-size:3rem;margin-bottom:16px;">🎁</div>
 				<h3>Gift Items</h3>
 				<p>Hajj/Umrah gift sets, prayer accessories, and souvenirs from the Holy Land.</p>
-				<a href="#" class="booking-btn booking-btn-outline" style="margin-top:16px;">View Gifts</a>
+				<a href="<?php echo esc_url( $salla_url ); ?>" target="_blank" class="booking-btn booking-btn-outline" style="margin-top:16px;">View Gifts</a>
 			</div>
 		</div>
 	</section>
@@ -48,8 +50,8 @@ get_header();
 			<div style="font-size:3rem;margin-bottom:16px;">🛒</div>
 			<h2 style="color:var(--booking-green-dark);margin:0 0 12px;">Visit Our Online Store</h2>
 			<p style="color:var(--booking-text-light);max-width:520px;margin:0 auto 24px;">Our full product catalog is available on our Salla store. Browse, order, and get delivery to your doorstep.</p>
-			<a href="#" class="booking-btn booking-btn-primary" style="padding:16px 40px !important;font-size:1.05rem !important;">Go to Salla Store</a>
-			<p style="color:var(--booking-text-muted);font-size:0.85rem;margin-top:16px;">Salla store link will be updated soon.</p>
+			<a href="<?php echo esc_url( $salla_url ); ?>" target="_blank" class="booking-btn booking-btn-primary" style="padding:16px 40px !important;font-size:1.05rem !important;">Go to Salla Store</a>
+			<?php if ( $salla_url === '#' ) : ?><p style="color:var(--booking-text-muted);font-size:0.85rem;margin-top:16px;">Salla store link will be configured in admin Settings.</p><?php endif; ?>
 		</div>
 	</section>
 

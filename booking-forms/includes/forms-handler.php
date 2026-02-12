@@ -1,6 +1,6 @@
 <?php
 /**
- * Form submission handlers
+ * Form submission handlers — with email notifications
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -29,6 +29,9 @@ function booking_forms_handle_submit() {
 		case 'contact':
 			booking_forms_handle_contact();
 			break;
+		case 'donation':
+			booking_forms_handle_donation();
+			break;
 	}
 }
 
@@ -42,21 +45,28 @@ function booking_forms_handle_pick_drop() {
 		}
 	}
 	$whatsapp = ! empty( $_POST['whatsapp'] ) ? sanitize_text_field( $_POST['whatsapp'] ) : sanitize_text_field( $_POST['mobile'] );
-	$wpdb->insert( $wpdb->prefix . 'booking_pick_drop', array(
-		'full_name' => sanitize_text_field( $_POST['full_name'] ),
-		'mobile' => sanitize_text_field( $_POST['mobile'] ),
-		'whatsapp' => $whatsapp,
-		'whatsapp_same' => ! empty( $_POST['whatsapp_same'] ) ? 1 : 0,
+	$data = array(
+		'full_name'       => sanitize_text_field( $_POST['full_name'] ),
+		'mobile'          => sanitize_text_field( $_POST['mobile'] ),
+		'whatsapp'        => $whatsapp,
+		'whatsapp_same'   => ! empty( $_POST['whatsapp_same'] ) ? 1 : 0,
 		'pickup_location' => sanitize_textarea_field( $_POST['pickup_location'] ),
-		'drop_location' => sanitize_textarea_field( $_POST['drop_location'] ),
-		'booking_date' => sanitize_text_field( $_POST['booking_date'] ),
-		'booking_time' => sanitize_text_field( $_POST['booking_time'] ),
-		'passengers' => max( 1, (int) $_POST['passengers'] ?? 1 ),
-		'vehicle_type' => sanitize_text_field( $_POST['vehicle_type'] ?? '' ),
-		'luggage' => ! empty( $_POST['luggage'] ) ? 1 : 0,
-		'notes' => sanitize_textarea_field( $_POST['notes'] ?? '' ),
-		'status' => 'pending',
-	) );
+		'drop_location'   => sanitize_textarea_field( $_POST['drop_location'] ),
+		'booking_date'    => sanitize_text_field( $_POST['booking_date'] ),
+		'booking_time'    => sanitize_text_field( $_POST['booking_time'] ),
+		'passengers'      => max( 1, (int) ( $_POST['passengers'] ?? 1 ) ),
+		'vehicle_type'    => sanitize_text_field( $_POST['vehicle_type'] ?? '' ),
+		'luggage'         => ! empty( $_POST['luggage'] ) ? 1 : 0,
+		'notes'           => sanitize_textarea_field( $_POST['notes'] ?? '' ),
+		'status'          => 'pending',
+	);
+	$wpdb->insert( $wpdb->prefix . 'booking_pick_drop', $data );
+
+	/* Send email notification */
+	if ( function_exists( 'booking_notify_pick_drop' ) ) {
+		booking_notify_pick_drop( $data );
+	}
+
 	wp_redirect( add_query_arg( 'booking_success', 'pick_drop', wp_get_referer() ) );
 	exit;
 }
@@ -70,16 +80,22 @@ function booking_forms_handle_ziyarat() {
 			exit;
 		}
 	}
-	$wpdb->insert( $wpdb->prefix . 'booking_ziyarat_inquiries', array(
-		'package_id' => (int) $_POST['package_id'],
-		'inquiry_date' => sanitize_text_field( $_POST['inquiry_date'] ),
-		'persons' => max( 1, (int) $_POST['persons'] ?? 1 ),
+	$data = array(
+		'package_id'      => (int) $_POST['package_id'],
+		'inquiry_date'    => sanitize_text_field( $_POST['inquiry_date'] ),
+		'persons'         => max( 1, (int) ( $_POST['persons'] ?? 1 ) ),
 		'pickup_location' => sanitize_textarea_field( $_POST['pickup_location'] ?? '' ),
-		'full_name' => sanitize_text_field( $_POST['full_name'] ),
-		'mobile' => sanitize_text_field( $_POST['mobile'] ),
-		'notes' => sanitize_textarea_field( $_POST['notes'] ?? '' ),
-		'status' => 'pending',
-	) );
+		'full_name'       => sanitize_text_field( $_POST['full_name'] ),
+		'mobile'          => sanitize_text_field( $_POST['mobile'] ),
+		'notes'           => sanitize_textarea_field( $_POST['notes'] ?? '' ),
+		'status'          => 'pending',
+	);
+	$wpdb->insert( $wpdb->prefix . 'booking_ziyarat_inquiries', $data );
+
+	if ( function_exists( 'booking_notify_ziyarat' ) ) {
+		booking_notify_ziyarat( $data );
+	}
+
 	wp_redirect( add_query_arg( 'booking_success', 'ziyarat', wp_get_referer() ) );
 	exit;
 }
@@ -93,15 +109,21 @@ function booking_forms_handle_khajoor_bulk() {
 			exit;
 		}
 	}
-	$wpdb->insert( $wpdb->prefix . 'booking_khajoor_bulk', array(
-		'product_type' => sanitize_text_field( $_POST['product_type'] ),
-		'quantity' => sanitize_text_field( $_POST['quantity'] ),
+	$data = array(
+		'product_type'  => sanitize_text_field( $_POST['product_type'] ),
+		'quantity'      => sanitize_text_field( $_POST['quantity'] ),
 		'delivery_city' => sanitize_text_field( $_POST['delivery_city'] ),
-		'full_name' => sanitize_text_field( $_POST['full_name'] ),
-		'phone' => sanitize_text_field( $_POST['phone'] ),
-		'notes' => sanitize_textarea_field( $_POST['notes'] ?? '' ),
-		'status' => 'pending',
-	) );
+		'full_name'     => sanitize_text_field( $_POST['full_name'] ),
+		'phone'         => sanitize_text_field( $_POST['phone'] ),
+		'notes'         => sanitize_textarea_field( $_POST['notes'] ?? '' ),
+		'status'        => 'pending',
+	);
+	$wpdb->insert( $wpdb->prefix . 'booking_khajoor_bulk', $data );
+
+	if ( function_exists( 'booking_notify_khajoor_bulk' ) ) {
+		booking_notify_khajoor_bulk( $data );
+	}
+
 	wp_redirect( add_query_arg( 'booking_success', 'khajoor_bulk', wp_get_referer() ) );
 	exit;
 }
@@ -115,14 +137,20 @@ function booking_forms_handle_khajoor_gift() {
 			exit;
 		}
 	}
-	$wpdb->insert( $wpdb->prefix . 'booking_khajoor_gift', array(
-		'full_name' => sanitize_text_field( $_POST['full_name'] ),
-		'phone' => sanitize_text_field( $_POST['phone'] ),
-		'gift_details' => sanitize_textarea_field( $_POST['gift_details'] ?? '' ),
+	$data = array(
+		'full_name'     => sanitize_text_field( $_POST['full_name'] ),
+		'phone'         => sanitize_text_field( $_POST['phone'] ),
+		'gift_details'  => sanitize_textarea_field( $_POST['gift_details'] ?? '' ),
 		'delivery_city' => sanitize_text_field( $_POST['delivery_city'] ?? '' ),
-		'notes' => sanitize_textarea_field( $_POST['notes'] ?? '' ),
-		'status' => 'pending',
-	) );
+		'notes'         => sanitize_textarea_field( $_POST['notes'] ?? '' ),
+		'status'        => 'pending',
+	);
+	$wpdb->insert( $wpdb->prefix . 'booking_khajoor_gift', $data );
+
+	if ( function_exists( 'booking_notify_khajoor_gift' ) ) {
+		booking_notify_khajoor_gift( $data );
+	}
+
 	wp_redirect( add_query_arg( 'booking_success', 'khajoor_gift', wp_get_referer() ) );
 	exit;
 }
@@ -136,13 +164,54 @@ function booking_forms_handle_contact() {
 			exit;
 		}
 	}
-	$wpdb->insert( $wpdb->prefix . 'booking_contact', array(
-		'name' => sanitize_text_field( $_POST['name'] ),
-		'email' => sanitize_email( $_POST['email'] ),
-		'phone' => sanitize_text_field( $_POST['phone'] ?? '' ),
+	$data = array(
+		'name'    => sanitize_text_field( $_POST['name'] ),
+		'email'   => sanitize_email( $_POST['email'] ),
+		'phone'   => sanitize_text_field( $_POST['phone'] ?? '' ),
 		'message' => sanitize_textarea_field( $_POST['message'] ),
-		'status' => 'unread',
-	) );
+		'status'  => 'unread',
+	);
+	$wpdb->insert( $wpdb->prefix . 'booking_contact', $data );
+
+	if ( function_exists( 'booking_notify_contact' ) ) {
+		booking_notify_contact( $data );
+	}
+
 	wp_redirect( add_query_arg( 'booking_success', 'contact', wp_get_referer() ) );
+	exit;
+}
+
+/* ============================================
+   DONATION FORM HANDLER
+   ============================================ */
+function booking_forms_handle_donation() {
+	global $wpdb;
+
+	$amount = sanitize_text_field( $_POST['donation_amount'] ?? '' );
+	if ( $amount === 'custom' ) {
+		$amount = sanitize_text_field( $_POST['custom_amount'] ?? '0' );
+	}
+	$amount = floatval( $amount );
+	if ( $amount <= 0 ) {
+		wp_redirect( add_query_arg( 'booking_error', 'amount', wp_get_referer() ) );
+		exit;
+	}
+
+	$data = array(
+		'donation_type' => sanitize_text_field( $_POST['donation_type'] ?? 'general' ),
+		'amount'        => $amount,
+		'donor_name'    => sanitize_text_field( $_POST['donor_name'] ?? '' ),
+		'donor_phone'   => sanitize_text_field( $_POST['donor_phone'] ?? '' ),
+		'dua_request'   => sanitize_textarea_field( $_POST['dua_request'] ?? '' ),
+		'payment_method' => sanitize_text_field( $_POST['payment_method'] ?? 'bank_transfer' ),
+		'status'        => 'pending',
+	);
+	$wpdb->insert( $wpdb->prefix . 'booking_donations', $data );
+
+	if ( function_exists( 'booking_notify_donation' ) ) {
+		booking_notify_donation( $data );
+	}
+
+	wp_redirect( add_query_arg( 'booking_success', 'donation', wp_get_referer() ) );
 	exit;
 }

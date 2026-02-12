@@ -5,6 +5,9 @@
  */
 defined( 'ABSPATH' ) || exit;
 get_header();
+
+$wa_number = get_theme_mod( 'booking_whatsapp_number', '966500000000' );
+$wa_clean = preg_replace( '/[^0-9]/', '', $wa_number );
 ?>
 
 <div class="booking-page-banner" style="background:linear-gradient(135deg, #1a3a2a 0%, #004d2d 40%, #006B3F 100%);">
@@ -39,7 +42,7 @@ get_header();
 		</div>
 	</section>
 
-	<!-- Donation Ayah -->
+	<!-- Quranic Ayah -->
 	<section class="booking-page-section bg-cream">
 		<div class="booking-inner" style="text-align:center;max-width:700px;margin:0 auto;padding:40px 24px;">
 			<p style="font-family:'Amiri',serif;font-size:1.75rem;color:var(--booking-gold-dark);margin:0 0 16px;line-height:1.6;direction:rtl;">مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ فِي كُلِّ سُنبُلَةٍ مِّائَةُ حَبَّةٍ</p>
@@ -47,31 +50,14 @@ get_header();
 		</div>
 	</section>
 
-	<!-- How To Donate -->
+	<!-- Donation Form -->
 	<section class="booking-page-section">
 		<div style="text-align:center;margin-bottom:40px;">
 			<span style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Donate</span>
-			<h2 style="color:var(--booking-green-dark);margin:0 0 8px;">Ways to Contribute</h2>
+			<h2 style="color:var(--booking-green-dark);margin:0 0 8px;">Make a Contribution</h2>
+			<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto;">Choose an amount and submit. We will contact you to confirm payment details.</p>
 		</div>
-		<div class="booking-grid-2" style="max-width:800px;margin:0 auto;">
-			<div class="booking-card booking-card-accent" style="padding:32px;">
-				<h3>Bank Transfer</h3>
-				<p>Contact us on WhatsApp for our bank account details for direct transfer.</p>
-				<?php
-				$wa_number = get_theme_mod( 'booking_whatsapp_number', '966500000000' );
-				$wa_clean = preg_replace( '/[^0-9]/', '', $wa_number );
-				$wa_msg = rawurlencode( 'Assalamu Alaikum, I would like to make a donation. Please share bank details.' );
-				?>
-				<a href="https://wa.me/<?php echo esc_attr( $wa_clean ); ?>?text=<?php echo esc_attr( $wa_msg ); ?>" target="_blank" class="booking-btn booking-btn-primary" style="margin-top:16px;">
-					WhatsApp Us
-				</a>
-			</div>
-			<div class="booking-card booking-card-accent" style="padding:32px;">
-				<h3>Online Payment</h3>
-				<p>Use our secure online payment gateway to donate instantly. Coming soon!</p>
-				<span class="booking-btn booking-btn-outline" style="margin-top:16px;opacity:0.6;cursor:default;">Coming Soon</span>
-			</div>
-		</div>
+		<?php echo do_shortcode( '[booking_donation]' ); ?>
 	</section>
 
 	<!-- Dua Request -->

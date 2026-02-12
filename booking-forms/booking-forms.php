@@ -1,19 +1,20 @@
 <?php
 /**
  * Plugin Name: Booking Forms & Admin
- * Description: Pick & Drop, Ziyarat, Khajoor, Contact forms with database storage and admin panel.
- * Version: 1.0
+ * Description: Pick & Drop, Ziyarat, Khajoor, Contact, Donation forms with database storage, admin panel, and email notifications.
+ * Version: 2.0
  * Author: Booking Project
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BOOKING_FORMS_VERSION', '1.0' );
+define( 'BOOKING_FORMS_VERSION', '2.0' );
 define( 'BOOKING_FORMS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BOOKING_FORMS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once BOOKING_FORMS_PATH . 'includes/admin-pages.php';
 require_once BOOKING_FORMS_PATH . 'includes/ziyarat-cpt.php';
+require_once BOOKING_FORMS_PATH . 'includes/email-notifications.php';
 require_once BOOKING_FORMS_PATH . 'includes/forms-handler.php';
 require_once BOOKING_FORMS_PATH . 'includes/shortcodes.php';
 
@@ -105,12 +106,26 @@ function booking_forms_create_tables() {
 		PRIMARY KEY (id)
 	) $charset;";
 
+	$sql_donations = "CREATE TABLE {$wpdb->prefix}booking_donations (
+		id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+		donation_type varchar(50) NOT NULL DEFAULT 'general',
+		amount decimal(10,2) NOT NULL DEFAULT 0.00,
+		donor_name varchar(100) DEFAULT '',
+		donor_phone varchar(20) DEFAULT '',
+		dua_request text,
+		payment_method varchar(50) DEFAULT 'bank_transfer',
+		status varchar(20) DEFAULT 'pending',
+		created_at datetime DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (id)
+	) $charset;";
+
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql_pick_drop );
 	dbDelta( $sql_ziyarat );
 	dbDelta( $sql_khajoor_bulk );
 	dbDelta( $sql_khajoor_gift );
 	dbDelta( $sql_contact );
+	dbDelta( $sql_donations );
 }
 
 /* Admin menu */
@@ -129,6 +144,7 @@ function booking_forms_admin_menu() {
 	add_submenu_page( 'booking-forms', 'Ziyarat Inquiries', 'Ziyarat Inquiries', 'manage_options', 'booking-ziyarat', 'booking_forms_ziyarat_page' );
 	add_submenu_page( 'booking-forms', 'Khajoor Inquiries', 'Khajoor Inquiries', 'manage_options', 'booking-khajoor', 'booking_forms_khajoor_page' );
 	add_submenu_page( 'booking-forms', 'Contact Messages', 'Contact Messages', 'manage_options', 'booking-contact', 'booking_forms_contact_page' );
+	add_submenu_page( 'booking-forms', 'Donations', 'Donations', 'manage_options', 'booking-donations', 'booking_forms_donations_page' );
 	add_submenu_page( 'booking-forms', 'Settings', 'Settings', 'manage_options', 'booking-settings', 'booking_forms_settings_page' );
 }
 
@@ -138,6 +154,8 @@ function booking_forms_admin_dashboard() {
 	$ziyarat = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_ziyarat_inquiries WHERE status = 'pending'" );
 	$khajoor = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_khajoor_bulk WHERE status = 'pending'" ) + $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_khajoor_gift WHERE status = 'pending'" );
 	$contact = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_contact WHERE status = 'unread'" );
+	$donations = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_donations WHERE status = 'pending'" );
+	$donation_total = $wpdb->get_var( "SELECT COALESCE(SUM(amount),0) FROM {$wpdb->prefix}booking_donations WHERE status IN ('confirmed','completed')" );
 	$total_pick = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_pick_drop" );
 	$total_ziyarat = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_ziyarat_inquiries" );
 	?>
@@ -164,6 +182,16 @@ function booking_forms_admin_dashboard() {
 				<h3>Contact Messages</h3>
 				<div class="number gold"><?php echo (int) $contact; ?></div>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-contact' ) ); ?>">View all →</a>
+			</div>
+			<div class="booking-dash-card" style="border-left-color:#C9A227;">
+				<h3>Donations (Pending)</h3>
+				<div class="number gold"><?php echo (int) $donations; ?></div>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-donations' ) ); ?>">View all →</a>
+			</div>
+			<div class="booking-dash-card" style="border-left-color:#006B3F;">
+				<h3>Total Donations (Confirmed)</h3>
+				<div class="number green">SAR <?php echo number_format( $donation_total, 0 ); ?></div>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-donations' ) ); ?>">Manage →</a>
 			</div>
 		</div>
 	</div>

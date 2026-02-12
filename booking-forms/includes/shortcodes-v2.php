@@ -176,6 +176,121 @@ function booking_v2_khajoor_gift() {
 	return ob_get_clean();
 }
 
+/* ============================================
+   DONATION FORM SHORTCODE
+   ============================================ */
+remove_shortcode( 'booking_donation' );
+add_shortcode( 'booking_donation', 'booking_v2_donation' );
+function booking_v2_donation() {
+	ob_start();
+	$success = isset( $_GET['booking_success'] ) && $_GET['booking_success'] === 'donation';
+	$error = isset( $_GET['booking_error'] );
+
+	/* Campaign data for progress bar */
+	$camp_active  = get_option( 'booking_campaign_active', 0 );
+	$camp_name    = get_option( 'booking_campaign_name', '' );
+	$camp_goal    = floatval( get_option( 'booking_campaign_goal', 0 ) );
+	$camp_mode    = get_option( 'booking_campaign_mode', 'auto' );
+	$camp_manual  = floatval( get_option( 'booking_campaign_manual_amount', 0 ) );
+	if ( $camp_mode === 'auto' ) {
+		global $wpdb;
+		$camp_current = floatval( $wpdb->get_var( "SELECT COALESCE(SUM(amount),0) FROM {$wpdb->prefix}booking_donations WHERE status IN ('confirmed','completed')" ) );
+	} else {
+		$camp_current = $camp_manual;
+	}
+	$camp_percent = ( $camp_goal > 0 ) ? min( 100, round( ( $camp_current / $camp_goal ) * 100, 1 ) ) : 0;
+	?>
+
+	<?php if ( $camp_active && $camp_goal > 0 ) : ?>
+	<div class="booking-card" style="margin-bottom:32px;padding:28px;text-align:center;">
+		<?php if ( $camp_name ) : ?><h3 style="margin:0 0 8px;color:var(--booking-green);"><?php echo esc_html( $camp_name ); ?></h3><?php endif; ?>
+		<div style="background:var(--booking-cream);border-radius:12px;overflow:hidden;height:32px;position:relative;margin:16px 0;">
+			<div style="height:100%;background:linear-gradient(90deg, var(--booking-green), var(--booking-green-light));width:<?php echo $camp_percent; ?>%;transition:width 0.8s ease;border-radius:12px;"></div>
+			<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.85rem;font-weight:600;color:var(--booking-text);">SAR <?php echo number_format( $camp_current, 0 ); ?> / <?php echo number_format( $camp_goal, 0 ); ?></span>
+		</div>
+		<p style="margin:0;color:var(--booking-text-muted);font-size:0.9rem;"><?php echo $camp_percent; ?>% of goal reached</p>
+	</div>
+	<?php endif; ?>
+
+	<div class="booking-form-wrap">
+		<?php if ( $success ) : ?><div class="booking-success">✓ JazakAllah Khair! Your donation has been recorded. We will contact you to confirm payment.</div><?php endif; ?>
+		<?php if ( $error ) : ?><div class="booking-error">Please select a valid donation amount.</div><?php endif; ?>
+		<form method="post" class="booking-form" id="donationForm">
+			<?php wp_nonce_field( 'booking_form', 'booking_nonce' ); ?>
+			<input type="hidden" name="booking_form_type" value="donation">
+
+			<div class="form-group">
+				<label>Donation Type <span class="required">*</span></label>
+				<select name="donation_type" required>
+					<option value="sadaqah">Sadaqah (General Charity)</option>
+					<option value="zakat">Zakat</option>
+					<option value="ramadan_iftar">Ramadan Iftar Sponsorship</option>
+					<option value="general">General Donation</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label>Amount (SAR) <span class="required">*</span></label>
+				<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+					<label style="display:flex;align-items:center;gap:6px;padding:12px 20px;border:2px solid var(--booking-border);border-radius:var(--booking-radius-sm);cursor:pointer;transition:all 0.2s;font-weight:500;" class="amount-option">
+						<input type="radio" name="donation_amount" value="50" required style="display:none;"> SAR 50
+					</label>
+					<label style="display:flex;align-items:center;gap:6px;padding:12px 20px;border:2px solid var(--booking-border);border-radius:var(--booking-radius-sm);cursor:pointer;transition:all 0.2s;font-weight:500;" class="amount-option">
+						<input type="radio" name="donation_amount" value="100" style="display:none;"> SAR 100
+					</label>
+					<label style="display:flex;align-items:center;gap:6px;padding:12px 20px;border:2px solid var(--booking-border);border-radius:var(--booking-radius-sm);cursor:pointer;transition:all 0.2s;font-weight:500;" class="amount-option">
+						<input type="radio" name="donation_amount" value="200" style="display:none;"> SAR 200
+					</label>
+					<label style="display:flex;align-items:center;gap:6px;padding:12px 20px;border:2px solid var(--booking-border);border-radius:var(--booking-radius-sm);cursor:pointer;transition:all 0.2s;font-weight:500;" class="amount-option">
+						<input type="radio" name="donation_amount" value="500" style="display:none;"> SAR 500
+					</label>
+					<label style="display:flex;align-items:center;gap:6px;padding:12px 20px;border:2px solid var(--booking-border);border-radius:var(--booking-radius-sm);cursor:pointer;transition:all 0.2s;font-weight:500;" class="amount-option">
+						<input type="radio" name="donation_amount" value="custom" style="display:none;"> Custom
+					</label>
+				</div>
+				<input type="number" name="custom_amount" id="customAmountInput" placeholder="Enter custom amount (SAR)" min="1" step="1" style="display:none;">
+			</div>
+
+			<div class="form-group">
+				<label>Payment Method</label>
+				<select name="payment_method">
+					<option value="bank_transfer">Bank Transfer (via WhatsApp)</option>
+					<option value="cash">Cash</option>
+				</select>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group"><label>Your Name</label><input type="text" name="donor_name" placeholder="Optional"></div>
+				<div class="form-group"><label>Phone / WhatsApp</label><input type="tel" name="donor_phone" placeholder="Optional"></div>
+			</div>
+
+			<div class="form-group"><label>Note / Dua Request</label><textarea name="dua_request" rows="3" placeholder="If you'd like us to make a special dua on your behalf..."></textarea></div>
+
+			<div class="form-group"><button type="submit" class="booking-btn booking-btn-gold" style="width:100%;">Submit Donation</button></div>
+		</form>
+	</div>
+
+	<style>
+	.amount-option { user-select:none; }
+	.amount-option:has(input:checked) { border-color: var(--booking-gold) !important; background: rgba(201,162,39,0.08); color: var(--booking-gold-dark); }
+	.amount-option:hover { border-color: var(--booking-gold) !important; }
+	</style>
+	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var custom = document.getElementById('customAmountInput');
+		document.querySelectorAll('input[name="donation_amount"]').forEach(function(r) {
+			r.addEventListener('change', function() {
+				custom.style.display = (this.value === 'custom') ? 'block' : 'none';
+				if (this.value === 'custom') { custom.required = true; custom.focus(); }
+				else { custom.required = false; }
+			});
+		});
+	});
+	</script>
+	<?php
+	return ob_get_clean();
+}
+
 add_shortcode( 'booking_contact', 'booking_v2_contact' );
 function booking_v2_contact() {
 	ob_start();
