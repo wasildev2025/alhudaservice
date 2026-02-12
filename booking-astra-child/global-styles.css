@@ -494,6 +494,101 @@ input[type="submit"]:hover {
 }
 
 /* ============================================
+   INNER PAGE — Full-width overrides for Astra
+   ============================================ */
+body.booking-inner-page #content,
+body.booking-inner-page #content .ast-container,
+body.booking-inner-page .site-main,
+body.booking-inner-page #content .ast-container {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+body.booking-inner-page #page,
+body.booking-inner-page .site {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+body.booking-inner-page .entry-content {
+  max-width: none !important;
+}
+
+/* ============================================
+   SCROLL TO TOP BUTTON (injected via footer)
+   ============================================ */
+.booking-scroll-top {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background: var(--booking-green);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--booking-shadow-sm);
+  z-index: 9998;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: var(--booking-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.booking-scroll-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.booking-scroll-top:hover {
+  background: var(--booking-gold);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.booking-breadcrumb {
+  padding: 12px 24px;
+  background: var(--booking-cream);
+  font-size: 0.85rem;
+  color: var(--booking-text-muted);
+  border-bottom: 1px solid var(--booking-border);
+}
+
+.booking-breadcrumb a {
+  color: var(--booking-green);
+  text-decoration: none;
+}
+
+.booking-breadcrumb a:hover {
+  color: var(--booking-gold);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.booking-page-banner h1,
+.booking-page-banner p {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.booking-page-banner p {
+  animation-delay: 0.15s;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
@@ -503,4 +598,15 @@ input[type="submit"]:hover {
   .booking-grid-2,
   .booking-grid-3,
   .booking-grid-4 { grid-template-columns: 1fr; }
+  
+  .main-header-menu .menu-item > .menu-link {
+    padding: 6px 12px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-page-banner { padding: 40px 16px; }
+  .booking-page-section { padding: 40px 16px; }
+  .booking-card { padding: 24px 20px; }
 }

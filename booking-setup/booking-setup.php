@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Booking Site Setup
  * Description: One-click setup: creates pages, menu, config. Run once then deactivate.
- * Version: 1.0
+ * Version: 2.0
  * Author: Booking Project
  */
 
@@ -17,17 +17,21 @@ function booking_setup_on_activate() {
 }
 
 function booking_setup_create_pages() {
+	/*
+	 * Page templates in the child theme (page-{slug}.php) handle all layout/content.
+	 * We just need the pages to exist with the correct slugs.
+	 */
 	$pages = array(
-		array( 'Pick & Drop', 'pick-drop', '[booking_pick_drop]' ),
-		array( 'Ziyarat Packages', 'ziyarat-packages', '[booking_ziyarat_list]<h3>Inquiry Form</h3>[booking_ziyarat]' ),
-		array( 'Khajoor', 'khajoor', '<h2>Premium Dates</h2><p>Ajwa, Safawi, Mabroom and more. Bulk orders and gift boxes available.</p><h3>Bulk Order Inquiry</h3>[booking_khajoor_bulk]<h3>Gift Box Inquiry</h3>[booking_khajoor_gift]<p><a href="/shop/" class="ast-button">Buy on Store</a></p>' ),
-		array( 'Shop', 'shop', '<p>Visit our Salla store for Islamic books and Khajoor products.</p><p><a href="#" class="ast-button">Go to Shop</a></p>' ),
-		array( 'Donations', 'donations', '[Donation form - Phase 3]' ),
-		array( 'About Us', 'about-us', '<h2>About Us</h2><p>We provide trusted services for pilgrims and travelers in Saudi Arabia: transport, Ziyarat packages, premium dates, Islamic books, and donation collection.</p>' ),
-		array( 'Contact Us', 'contact-us', '<h2>Contact Us</h2><p>Reach us via WhatsApp or the form below.</p>[booking_contact]' ),
-		array( 'FAQ', 'faq', '<h2>Frequently Asked Questions</h2><p><strong>How do I book Pick & Drop?</strong> Fill the form on the Pick & Drop page and we will confirm via WhatsApp.</p><p><strong>Do you deliver Khajoor?</strong> Yes, we support delivery to major cities. Use the bulk inquiry form.</p>' ),
-		array( 'Terms & Conditions', 'terms-conditions', '<h2>Terms & Conditions</h2><p>Terms content to be added.</p>' ),
-		array( 'Privacy Policy', 'privacy-policy', '<h2>Privacy Policy</h2><p>We respect your privacy. Your data is used only to process bookings and inquiries.</p>' ),
+		array( 'Pick & Drop',         'pick-drop',         '' ),
+		array( 'Ziyarat Packages',    'ziyarat-packages',  '' ),
+		array( 'Khajoor',             'khajoor',           '' ),
+		array( 'Shop',                'shop',              '' ),
+		array( 'Donations',           'donations',         '' ),
+		array( 'About Us',            'about-us',          '' ),
+		array( 'Contact Us',          'contact-us',        '' ),
+		array( 'FAQ',                 'faq',               '' ),
+		array( 'Terms & Conditions',  'terms-conditions',  '' ),
+		array( 'Privacy Policy',      'privacy-policy',    '' ),
 	);
 
 	foreach ( $pages as $p ) {
@@ -41,12 +45,8 @@ function booking_setup_create_pages() {
 				'post_content' => $p[2],
 				'menu_order'   => 0,
 			) );
-		} else {
-			wp_update_post( array(
-				'ID'           => $existing->ID,
-				'post_content' => $p[2],
-			) );
 		}
+		/* Don't overwrite existing pages - user may have customized content */
 	}
 }
 
@@ -58,22 +58,22 @@ function booking_setup_create_menu() {
 		$menu_id = wp_create_nav_menu( $menu_name );
 
 		$items = array(
-			'Home' => home_url( '/' ),
-			'Pick & Drop' => home_url( '/pick-drop/' ),
-			'Ziyarat Packages' => home_url( '/ziyarat-packages/' ),
-			'Khajoor' => home_url( '/khajoor/' ),
-			'Shop' => home_url( '/shop/' ),
-			'Donations' => home_url( '/donations/' ),
-			'About Us' => home_url( '/about-us/' ),
-			'Contact Us' => home_url( '/contact-us/' ),
+			'Home'              => home_url( '/' ),
+			'Pick & Drop'       => home_url( '/pick-drop/' ),
+			'Ziyarat Packages'  => home_url( '/ziyarat-packages/' ),
+			'Khajoor'           => home_url( '/khajoor/' ),
+			'Shop'              => home_url( '/shop/' ),
+			'Donations'         => home_url( '/donations/' ),
+			'About Us'          => home_url( '/about-us/' ),
+			'Contact Us'        => home_url( '/contact-us/' ),
 		);
 
 		$position = 0;
 		foreach ( $items as $title => $url ) {
 			wp_update_nav_menu_item( $menu_id, 0, array(
-				'menu-item-title'   => $title,
-				'menu-item-url'     => $url,
-				'menu-item-status'  => 'publish',
+				'menu-item-title'    => $title,
+				'menu-item-url'      => $url,
+				'menu-item-status'   => 'publish',
 				'menu-item-position' => $position++,
 			) );
 		}

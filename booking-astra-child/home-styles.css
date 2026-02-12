@@ -1,10 +1,9 @@
 /**
  * Professional Home Page Styles
  * Tabligh-inspired: Prayer times, top bar, Islamic patterns, refined layout
+ * NOTE: global-styles.css handles fonts, tokens, and shared components.
+ * This file is home-page-specific overrides only.
  */
-
-/* Typography - Amiri + Cairo for Islamic feel */
-@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ============================================
    FULL-WIDTH LAYOUT - Tabligh style (edge-to-edge)

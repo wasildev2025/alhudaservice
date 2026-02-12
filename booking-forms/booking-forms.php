@@ -17,6 +17,14 @@ require_once BOOKING_FORMS_PATH . 'includes/ziyarat-cpt.php';
 require_once BOOKING_FORMS_PATH . 'includes/forms-handler.php';
 require_once BOOKING_FORMS_PATH . 'includes/shortcodes.php';
 
+/* Enqueue admin styles */
+add_action( 'admin_enqueue_scripts', 'booking_forms_admin_styles' );
+function booking_forms_admin_styles( $hook ) {
+	if ( strpos( $hook, 'booking' ) !== false ) {
+		wp_enqueue_style( 'booking-admin-styles', BOOKING_FORMS_URL . 'admin-styles.css', array(), BOOKING_FORMS_VERSION );
+	}
+}
+
 /* Database setup */
 register_activation_hook( __FILE__, 'booking_forms_activate' );
 function booking_forms_activate() {
@@ -130,29 +138,32 @@ function booking_forms_admin_dashboard() {
 	$ziyarat = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_ziyarat_inquiries WHERE status = 'pending'" );
 	$khajoor = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_khajoor_bulk WHERE status = 'pending'" ) + $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_khajoor_gift WHERE status = 'pending'" );
 	$contact = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_contact WHERE status = 'unread'" );
+	$total_pick = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_pick_drop" );
+	$total_ziyarat = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}booking_ziyarat_inquiries" );
 	?>
 	<div class="wrap">
-		<h1>Booking Dashboard</h1>
-		<div class="booking-dashboard-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:20px 0;">
-			<div style="background:#fff;padding:20px;border-left:4px solid #006B3F;box-shadow:0 1px 3px rgba(0,0,0,.1);">
-				<h3 style="margin:0 0 8px;">Pick & Drop (Pending)</h3>
-				<p style="font-size:24px;margin:0;font-weight:bold;color:#006B3F;"><?php echo (int) $pick; ?></p>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-pick-drop' ) ); ?>">View all</a>
+		<h1 style="font-size:1.75rem;font-weight:700;color:#111;margin-bottom:4px;">Booking Dashboard</h1>
+		<p style="color:#6b7280;margin:0 0 24px;">Overview of pending bookings, inquiries, and messages.</p>
+		<div class="booking-dashboard-cards">
+			<div class="booking-dash-card">
+				<h3>Pick & Drop</h3>
+				<div class="number green"><?php echo (int) $pick; ?></div>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-pick-drop' ) ); ?>">View all (<?php echo (int) $total_pick; ?> total) →</a>
 			</div>
-			<div style="background:#fff;padding:20px;border-left:4px solid #C9A227;box-shadow:0 1px 3px rgba(0,0,0,.1);">
-				<h3 style="margin:0 0 8px;">Ziyarat (Pending)</h3>
-				<p style="font-size:24px;margin:0;font-weight:bold;color:#C9A227;"><?php echo (int) $ziyarat; ?></p>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-ziyarat' ) ); ?>">View all</a>
+			<div class="booking-dash-card gold">
+				<h3>Ziyarat Inquiries</h3>
+				<div class="number gold"><?php echo (int) $ziyarat; ?></div>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-ziyarat' ) ); ?>">View all (<?php echo (int) $total_ziyarat; ?> total) →</a>
 			</div>
-			<div style="background:#fff;padding:20px;border-left:4px solid #006B3F;box-shadow:0 1px 3px rgba(0,0,0,.1);">
-				<h3 style="margin:0 0 8px;">Khajoor (Pending)</h3>
-				<p style="font-size:24px;margin:0;font-weight:bold;color:#006B3F;"><?php echo (int) $khajoor; ?></p>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-khajoor' ) ); ?>">View all</a>
+			<div class="booking-dash-card">
+				<h3>Khajoor Inquiries</h3>
+				<div class="number green"><?php echo (int) $khajoor; ?></div>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-khajoor' ) ); ?>">View all →</a>
 			</div>
-			<div style="background:#fff;padding:20px;border-left:4px solid #C9A227;box-shadow:0 1px 3px rgba(0,0,0,.1);">
-				<h3 style="margin:0 0 8px;">Contact (Unread)</h3>
-				<p style="font-size:24px;margin:0;font-weight:bold;color:#C9A227;"><?php echo (int) $contact; ?></p>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-contact' ) ); ?>">View all</a>
+			<div class="booking-dash-card gold">
+				<h3>Contact Messages</h3>
+				<div class="number gold"><?php echo (int) $contact; ?></div>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-contact' ) ); ?>">View all →</a>
 			</div>
 		</div>
 	</div>
