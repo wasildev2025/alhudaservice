@@ -112,30 +112,41 @@ $site_desc = get_bloginfo( 'description' );
 				<p>Discover our curated packages for Makkah, Madinah, and beyond.</p>
 			</div>
 			<div class="booking-packages-grid">
-				<a href="<?php echo esc_url( home_url( '/ziyarat-packages/' ) ); ?>" class="booking-package-card">
-					<div class="booking-package-image" style="background:linear-gradient(135deg, #004d2d 0%, #006B3F 100%);"></div>
-					<div class="booking-package-body">
-						<h3>Makkah Half Day</h3>
-						<p>Visit key sites in Makkah with an experienced guide.</p>
-						<span class="booking-package-cta">View Details</span>
+				<?php
+				$featured_packages = new WP_Query( array(
+					'post_type'      => 'ziyarat_package',
+					'posts_per_page' => 3,
+					'post_status'    => 'publish',
+					'orderby'        => 'menu_order date',
+				) );
+
+				if ( $featured_packages->have_posts() ) :
+					while ( $featured_packages->have_posts() ) : $featured_packages->the_post();
+						$thumb = get_the_post_thumbnail_url( get_the_ID(), 'medium_large' );
+						$city  = get_post_meta( get_the_ID(), '_ziyarat_city', true );
+						?>
+						<a href="<?php the_permalink(); ?>" class="booking-package-card">
+							<div class="booking-package-image" style="background:<?php echo $thumb ? 'url(' . esc_url( $thumb ) . ') center/cover' : 'linear-gradient(135deg, #006B3F 0%, #028a4f 100%)'; ?>;">
+								<?php if ( $city ) : ?><span style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.6);color:#fff;padding:4px 8px;font-size:0.75rem;border-radius:4px;"><?php echo esc_html( $city ); ?></span><?php endif; ?>
+							</div>
+							<div class="booking-package-body">
+								<h3><?php the_title(); ?></h3>
+								<p><?php echo wp_trim_words( get_the_excerpt(), 10 ); ?></p>
+								<span class="booking-package-cta">View Details</span>
+							</div>
+						</a>
+						<?php
+					endwhile;
+					wp_reset_postdata();
+				else :
+					/* Fallback if no packages exist yet */
+					?>
+					<div class="booking-card" style="grid-column:1/-1;text-align:center;padding:40px;">
+						<p style="color:gray;">No packages added yet. Please add them in the Admin Panel.</p>
 					</div>
-				</a>
-				<a href="<?php echo esc_url( home_url( '/ziyarat-packages/' ) ); ?>" class="booking-package-card">
-					<div class="booking-package-image" style="background:linear-gradient(135deg, #006B3F 0%, #028a4f 100%);"></div>
-					<div class="booking-package-body">
-						<h3>Madinah Ziyarat</h3>
-						<p>Full day tour of Madinah's sacred places.</p>
-						<span class="booking-package-cta">View Details</span>
-					</div>
-				</a>
-				<a href="<?php echo esc_url( home_url( '/ziyarat-packages/' ) ); ?>" class="booking-package-card">
-					<div class="booking-package-image" style="background:linear-gradient(135deg, #9A7B1A 0%, #C9A227 100%);"></div>
-					<div class="booking-package-body">
-						<h3>Taif & Badr</h3>
-						<p>Extended trips to Taif, Badr, and historical sites.</p>
-						<span class="booking-package-cta">View Details</span>
-					</div>
-				</a>
+					<?php
+				endif;
+				?>
 			</div>
 		</div>
 	</section>

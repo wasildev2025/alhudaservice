@@ -364,9 +364,8 @@ function booking_forms_donations_page() {
 	<?php
 }
 
-function booking_forms_settings_page() {
 	if ( isset( $_POST['booking_save_settings'] ) && current_user_can( 'manage_options' ) && check_admin_referer( 'booking_settings' ) ) {
-		$opts = array( 'phone', 'whatsapp', 'email', 'working_hours', 'salla_store_url', 'notification_email' );
+		$opts = array( 'phone', 'whatsapp', 'email', 'working_hours', 'salla_store_url', 'shop_btn_text', 'notification_email' );
 		foreach ( $opts as $k ) {
 			if ( isset( $_POST[ 'booking_' . $k ] ) ) {
 				update_option( 'booking_' . $k, sanitize_text_field( $_POST[ 'booking_' . $k ] ) );
@@ -378,38 +377,87 @@ function booking_forms_settings_page() {
 		}
 		echo '<div class="notice notice-success"><p>Settings saved.</p></div>';
 	}
+	
+	/* Send Test Email */
+	if ( isset( $_POST['booking_send_test_email'] ) && current_user_can( 'manage_options' ) && check_admin_referer( 'booking_test_email' ) ) {
+		$to = get_option( 'booking_notification_email' ) ?: get_option( 'admin_email' );
+		$sent = wp_mail( $to, 'Test Email from Booking System', 'This is a test email to verify that your WordPress email sending is working correctly.' );
+		if ( $sent ) {
+			echo '<div class="notice notice-success"><p>Test email sent to ' . esc_html( $to ) . '.</p></div>';
+		} else {
+			echo '<div class="notice notice-error"><p>Failed to send email. Please check your SMTP settings.</p></div>';
+		}
+	}
+
 	$phone    = get_option( 'booking_phone', '' );
 	$whatsapp = get_option( 'booking_whatsapp', '' );
 	$email    = get_option( 'booking_email', '' );
 	$hours    = get_option( 'booking_working_hours', '' );
 	$salla    = get_option( 'booking_salla_store_url', '' );
+	$shop_btn = get_option( 'booking_shop_btn_text', 'Go to Salla Store' );
 	$notify   = get_option( 'booking_notification_email', '' );
 	?>
 	<div class="wrap">
 		<h1 style="font-size:1.5rem;font-weight:700;">Booking Settings</h1>
-		<form method="post">
-			<?php wp_nonce_field( 'booking_settings' ); ?>
+		
+		<h2 class="nav-tab-wrapper">
+			<a href="#settings" class="nav-tab nav-tab-active">General Settings</a>
+			<a href="#status" class="nav-tab">System Status</a>
+		</h2>
 
-			<h2 class="title" style="font-size:1.1rem;margin-top:24px;">Contact Information</h2>
-			<table class="form-table">
-				<tr><th><label for="booking_phone">Phone</label></th><td><input type="text" id="booking_phone" name="booking_phone" value="<?php echo esc_attr( $phone ); ?>" class="regular-text" placeholder="+966 5XX XXX XXXX"></td></tr>
-				<tr><th><label for="booking_whatsapp">WhatsApp Number</label></th><td><input type="text" id="booking_whatsapp" name="booking_whatsapp" value="<?php echo esc_attr( $whatsapp ); ?>" class="regular-text" placeholder="966501234567"><p class="description">With country code, no +. Used for floating button and click-to-chat.</p></td></tr>
-				<tr><th><label for="booking_email">Contact Email</label></th><td><input type="email" id="booking_email" name="booking_email" value="<?php echo esc_attr( $email ); ?>" class="regular-text" placeholder="info@yourdomain.com"></td></tr>
-				<tr><th><label for="booking_working_hours">Working Hours</label></th><td><input type="text" id="booking_working_hours" name="booking_working_hours" value="<?php echo esc_attr( $hours ); ?>" class="regular-text" placeholder="24/7"></td></tr>
+		<div id="settings-tab-content">
+			<form method="post">
+				<?php wp_nonce_field( 'booking_settings' ); ?>
+
+				<h2 class="title" style="font-size:1.1rem;margin-top:24px;">Contact Information</h2>
+				<table class="form-table">
+					<tr><th><label for="booking_phone">Phone</label></th><td><input type="text" id="booking_phone" name="booking_phone" value="<?php echo esc_attr( $phone ); ?>" class="regular-text" placeholder="+966 5XX XXX XXXX"></td></tr>
+					<tr><th><label for="booking_whatsapp">WhatsApp Number</label></th><td><input type="text" id="booking_whatsapp" name="booking_whatsapp" value="<?php echo esc_attr( $whatsapp ); ?>" class="regular-text" placeholder="966501234567"><p class="description">With country code, no +. Used for floating button and click-to-chat.</p></td></tr>
+					<tr><th><label for="booking_email">Contact Email</label></th><td><input type="email" id="booking_email" name="booking_email" value="<?php echo esc_attr( $email ); ?>" class="regular-text" placeholder="info@yourdomain.com"></td></tr>
+					<tr><th><label for="booking_working_hours">Working Hours</label></th><td><input type="text" id="booking_working_hours" name="booking_working_hours" value="<?php echo esc_attr( $hours ); ?>" class="regular-text" placeholder="24/7"></td></tr>
+				</table>
+
+				<h2 class="title" style="font-size:1.1rem;margin-top:24px;">Notifications</h2>
+				<table class="form-table">
+					<tr><th><label for="booking_notification_email">Notification Email</label></th><td><input type="email" id="booking_notification_email" name="booking_notification_email" value="<?php echo esc_attr( $notify ); ?>" class="regular-text" placeholder="admin@yourdomain.com"><p class="description">Receives alerts for all new bookings, inquiries, and donations. Falls back to WordPress admin email if empty.</p></td></tr>
+				</table>
+
+				<h2 class="title" style="font-size:1.1rem;margin-top:24px;">Salla Store Integration</h2>
+				<table class="form-table">
+					<tr><th><label for="booking_salla_store_url">Salla Store URL</label></th><td><input type="url" id="booking_salla_store_url" name="booking_salla_store_url" value="<?php echo esc_attr( $salla ); ?>" class="regular-text" placeholder="https://store.yourdomain.com"><p class="description">Your Salla store URL. Used for Shop, Buy Now buttons, and product links.</p></td></tr>
+					<tr><th><label for="booking_shop_btn_text">Shop Button Text</label></th><td><input type="text" id="booking_shop_btn_text" name="booking_shop_btn_text" value="<?php echo esc_attr( $shop_btn ); ?>" class="regular-text" placeholder="Go to Salla Store"></td></tr>
+				</table>
+
+				<p class="submit"><button type="submit" name="booking_save_settings" class="button button-primary">Save Settings</button></p>
+			</form>
+		</div>
+
+		<div id="status-tab-content" style="margin-top:40px;border-top:1px solid #ddd;padding-top:20px;">
+			<h2 class="title">System Status</h2>
+			<table class="widefat striped" style="max-width:800px;">
+				<thead><tr><th>Check</th><th>Status</th><th>Details</th></tr></thead>
+				<tbody>
+					<!-- Pages Check -->
+					<?php 
+					$pages = array( 'pick-drop', 'ziyarat-packages', 'khajoor', 'shop', 'donations', 'contact-us' );
+					foreach ( $pages as $slug ) {
+						$p = get_page_by_path( $slug );
+						echo '<tr>';
+						echo '<td>Page: <strong>' . esc_html( $slug ) . '</strong></td>';
+						echo '<td>' . ( $p ? '<span style="color:green;">&#10004; Exists</span>' : '<span style="color:red;">&#10008; Missing</span>' ) . '</td>';
+						echo '<td>' . ( $p ? 'ID: ' . $p->ID : 'Run setup plugin again' ) . '</td>';
+						echo '</tr>';
+					}
+					?>
+					<!-- Email Check -->
+					<tr>
+						<td>Email System</td>
+						<td><form method="post"><?php wp_nonce_field( 'booking_test_email' ); ?><button type="submit" name="booking_send_test_email" class="button button-secondary">Send Test Email</button></form></td>
+						<td>Sends to: <?php echo esc_html( $notify ?: get_option('admin_email') ); ?></td>
+					</tr>
+				</tbody>
 			</table>
-
-			<h2 class="title" style="font-size:1.1rem;margin-top:24px;">Notifications</h2>
-			<table class="form-table">
-				<tr><th><label for="booking_notification_email">Notification Email</label></th><td><input type="email" id="booking_notification_email" name="booking_notification_email" value="<?php echo esc_attr( $notify ); ?>" class="regular-text" placeholder="admin@yourdomain.com"><p class="description">Receives alerts for all new bookings, inquiries, and donations. Falls back to WordPress admin email if empty.</p></td></tr>
-			</table>
-
-			<h2 class="title" style="font-size:1.1rem;margin-top:24px;">Salla Store Integration</h2>
-			<table class="form-table">
-				<tr><th><label for="booking_salla_store_url">Salla Store URL</label></th><td><input type="url" id="booking_salla_store_url" name="booking_salla_store_url" value="<?php echo esc_attr( $salla ); ?>" class="regular-text" placeholder="https://store.yourdomain.com"><p class="description">Your Salla store URL. Used for Shop, Buy Now buttons, and product links.</p></td></tr>
-			</table>
-
-			<p class="submit"><button type="submit" name="booking_save_settings" class="button button-primary">Save Settings</button></p>
-		</form>
+		</div>
 	</div>
 	<?php
 }

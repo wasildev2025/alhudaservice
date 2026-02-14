@@ -50,7 +50,7 @@ if ( empty( $salla_url ) ) $salla_url = '#';
 			<div style="font-size:3rem;margin-bottom:16px;">🛒</div>
 			<h2 style="color:var(--booking-green-dark);margin:0 0 12px;">Visit Our Online Store</h2>
 			<p style="color:var(--booking-text-light);max-width:520px;margin:0 auto 24px;">Our full product catalog is available on our Salla store. Browse, order, and get delivery to your doorstep.</p>
-			<a href="<?php echo esc_url( $salla_url ); ?>" target="_blank" class="booking-btn booking-btn-primary" style="padding:16px 40px !important;font-size:1.05rem !important;">Go to Salla Store</a>
+			<a href="<?php echo esc_url( $salla_url ); ?>" target="_blank" class="booking-btn booking-btn-primary" style="padding:16px 40px !important;font-size:1.05rem !important;"><?php echo esc_html( get_option( 'booking_shop_btn_text', 'Go to Salla Store' ) ); ?></a>
 			<?php if ( $salla_url === '#' ) : ?><p style="color:var(--booking-text-muted);font-size:0.85rem;margin-top:16px;">Salla store link will be configured in admin Settings.</p><?php endif; ?>
 		</div>
 	</section>
