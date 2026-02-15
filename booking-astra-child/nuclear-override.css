@@ -1,0 +1,70 @@
+/* 
+NUCLEAR OVERRIDE
+Forces Deep Brown/Gold theme on stubborn elements 
+*/
+
+/* Hero Background */
+.booking-hero-bg {
+    background: linear-gradient(135deg, #281A15 0%, #3E2723 30%, #5D4037 70%, #8D6E63 100%) !important;
+}
+
+/* Page Banners (Pick & Drop, etc) */
+.booking-page-banner {
+    background: linear-gradient(135deg, #281A15 0%, #3E2723 40%, #5D4037 100%) !important;
+}
+
+/* WhatsApp Strip */
+.booking-whatsapp-strip {
+    background: #3E2723 !important;
+}
+
+/* Base Colors - Variables Override */
+:root {
+    --booking-green: #3E2723 !important;
+    --booking-green-dark: #281A15 !important;
+    --booking-green-light: #5D4037 !important;
+    --booking-gold: #C9A227 !important;
+}
+
+/* Buttons */
+.booking-btn-primary,
+button.booking-btn-primary,
+a.booking-btn-primary,
+input[type="submit"].booking-btn-primary {
+    background-color: #3E2723 !important;
+    border-color: #3E2723 !important;
+    color: #ffffff !important;
+}
+
+.booking-btn-primary:hover,
+button.booking-btn-primary:hover,
+a.booking-btn-primary:hover,
+input[type="submit"].booking-btn-primary:hover {
+    background-color: #C9A227 !important;
+    border-color: #C9A227 !important;
+}
+
+/* Dash Cards */
+.booking-dash-card .number.green {
+    color: #3E2723 !important;
+}
+
+/* Text overrides */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #281A15 !important;
+    /* Forces dark coffee text */
+}
+
+/* Specific Prayer Box overrides */
+.booking-prayer-box {
+    border-color: rgba(201, 162, 39, 0.3) !important;
+}
+
+.booking-prayer-box::before {
+    background: linear-gradient(90deg, #3E2723, #C9A227) !important;
+}

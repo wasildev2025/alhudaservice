@@ -10,7 +10,7 @@ $wa_number = get_theme_mod( 'booking_whatsapp_number', '966500000000' );
 $wa_clean = preg_replace( '/[^0-9]/', '', $wa_number );
 ?>
 
-<div class="booking-page-banner" style="background:linear-gradient(135deg, #1a3a2a 0%, #004d2d 40%, #006B3F 100%);">
+<div class="booking-page-banner" style="background:linear-gradient(135deg, #281A15 0%, #3E2723 40%, #5D4037 100%);">
 	<h1>Support Our Mission</h1>
 	<p>Your Sadaqah &amp; donations help us serve the Ummah — every contribution matters</p>
 </div>

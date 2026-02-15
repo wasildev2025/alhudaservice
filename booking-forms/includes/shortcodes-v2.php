@@ -68,13 +68,13 @@ function booking_v2_ziyarat_list() {
 		$thumb = has_post_thumbnail( $p ) ? get_the_post_thumbnail_url( $p, 'medium_large' ) : '';
 		?>
 		<a href="<?php echo esc_url( $url ); ?>" class="booking-card" style="padding:0;overflow:hidden;text-decoration:none;">
-			<div style="height:180px;background:<?php echo $thumb ? 'url(' . esc_url( $thumb ) . ') center/cover' : 'linear-gradient(135deg, var(--booking-green-dark), var(--booking-green))'; ?>;position:relative;">
-				<?php if ( $city ) : ?><span style="position:absolute;top:12px;left:12px;background:var(--booking-gold);color:#fff;padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;"><?php echo esc_html( $city ); ?></span><?php endif; ?>
+			<div style="height:180px;background:<?php echo $thumb ? 'url(' . esc_url( $thumb ) . ') center/cover' : 'linear-gradient(135deg, #281A15, #3E2723)'; ?>;position:relative;">
+				<?php if ( $city ) : ?><span style="position:absolute;top:12px;left:12px;background:#C9A227;color:#fff;padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;"><?php echo esc_html( $city ); ?></span><?php endif; ?>
 			</div>
 			<div style="padding:24px;">
 				<h3 style="margin:0 0 8px;"><?php echo esc_html( $p->post_title ); ?></h3>
 				<?php if ( $duration ) : ?><p style="font-size:0.9rem;margin:0 0 4px;">Duration: <?php echo esc_html( $duration ); ?></p><?php endif; ?>
-				<?php if ( $price ) : ?><p style="font-size:1rem;font-weight:600;color:var(--booking-gold);margin:0 0 12px;"><?php echo esc_html( $price ); ?></p><?php endif; ?>
+				<?php if ( $price ) : ?><p style="font-size:1rem;font-weight:600;color:#C9A227;margin:0 0 12px;"><?php echo esc_html( $price ); ?></p><?php endif; ?>
 				<span class="booking-btn booking-btn-primary" style="width:100%;padding:10px 20px !important;font-size:0.85rem !important;">View Details & Book</span>
 			</div>
 		</a>
@@ -203,9 +203,9 @@ function booking_v2_donation() {
 
 	<?php if ( $camp_active && $camp_goal > 0 ) : ?>
 	<div class="booking-card" style="margin-bottom:32px;padding:28px;text-align:center;">
-		<?php if ( $camp_name ) : ?><h3 style="margin:0 0 8px;color:var(--booking-green);"><?php echo esc_html( $camp_name ); ?></h3><?php endif; ?>
+		<?php if ( $camp_name ) : ?><h3 style="margin:0 0 8px;color:#3E2723;"><?php echo esc_html( $camp_name ); ?></h3><?php endif; ?>
 		<div style="background:var(--booking-cream);border-radius:12px;overflow:hidden;height:32px;position:relative;margin:16px 0;">
-			<div style="height:100%;background:linear-gradient(90deg, var(--booking-green), var(--booking-green-light));width:<?php echo $camp_percent; ?>%;transition:width 0.8s ease;border-radius:12px;"></div>
+			<div style="height:100%;background:linear-gradient(90deg, #3E2723, #5D4037);width:<?php echo $camp_percent; ?>%;transition:width 0.8s ease;border-radius:12px;"></div>
 			<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.85rem;font-weight:600;color:var(--booking-text);">SAR <?php echo number_format( $camp_current, 0 ); ?> / <?php echo number_format( $camp_goal, 0 ); ?></span>
 		</div>
 		<p style="margin:0;color:var(--booking-text-muted);font-size:0.9rem;"><?php echo $camp_percent; ?>% of goal reached</p>
@@ -272,8 +272,8 @@ function booking_v2_donation() {
 
 	<style>
 	.amount-option { user-select:none; }
-	.amount-option:has(input:checked) { border-color: var(--booking-gold) !important; background: rgba(201,162,39,0.08); color: var(--booking-gold-dark); }
-	.amount-option:hover { border-color: var(--booking-gold) !important; }
+	.amount-option:has(input:checked) { border-color: #C9A227 !important; background: rgba(201,162,39,0.08); color: var(--booking-gold-dark); }
+	.amount-option:hover { border-color: #C9A227 !important; }
 	</style>
 	<script>
 	document.addEventListener('DOMContentLoaded', function() {

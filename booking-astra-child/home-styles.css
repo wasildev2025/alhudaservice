@@ -102,8 +102,8 @@ body.home .site-header .ast-container {
   background: #fff;
   border-radius: 16px;
   padding: 36px;
-  box-shadow: 0 8px 32px rgba(0,107,63,0.08);
-  border: 2px solid rgba(201,162,39,0.3);
+  box-shadow: 0 8px 32px rgba(62, 39, 35, 0.08);
+  border: 2px solid rgba(201, 162, 39, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -269,7 +269,7 @@ body.home .site-header .ast-container {
 .booking-hero-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #002a1a 0%, #004d2d 30%, #006B3F 70%, #028a4f 100%);
+  background: linear-gradient(135deg, #281A15 0%, #3E2723 30%, #5D4037 70%, #8D6E63 100%);
   z-index: 0;
 }
 
@@ -289,7 +289,7 @@ body.home .site-header .ast-container {
   left: 0;
   right: 0;
   height: 120px;
-  background: linear-gradient(to top, rgba(0,0,0,0.15), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
   pointer-events: none;
 }
 
@@ -302,7 +302,7 @@ body.home .site-header .ast-container {
 
 .booking-bismillah {
   font-size: 2rem;
-  color: rgba(255,255,255,0.95);
+  color: rgba(255, 255, 255, 0.95);
   margin: 0 0 4px;
   letter-spacing: 0.02em;
 }
@@ -324,7 +324,7 @@ body.home .site-header .ast-container {
 
 .booking-hero-desc {
   font-size: 1.15rem;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
   margin: 0 0 32px;
   line-height: 1.6;
 }
@@ -357,17 +357,17 @@ body.home .site-header .ast-container {
   background: var(--booking-gold-light);
   color: #fff !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(201,162,39,0.35);
+  box-shadow: 0 8px 24px rgba(201, 162, 39, 0.35);
 }
 
 .booking-cta-secondary {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff !important;
-  border-color: rgba(255,255,255,0.5);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .booking-cta-secondary:hover {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   color: #fff !important;
   border-color: #fff;
   transform: translateY(-2px);
@@ -382,7 +382,7 @@ body.home .site-header .ast-container {
   background: var(--booking-cream);
   color: var(--booking-green-dark) !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 /* Services Grid */
@@ -398,14 +398,14 @@ body.home .site-header .ast-container {
   background: #fff;
   border-radius: 12px;
   text-decoration: none;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid #eee;
   transition: all 0.3s ease;
 }
 
 .booking-service-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,107,63,0.12);
+  box-shadow: 0 12px 40px rgba(62, 39, 35, 0.12);
   border-color: var(--booking-green);
 }
 
@@ -417,9 +417,9 @@ body.home .site-header .ast-container {
   width: 64px;
   height: 64px;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, rgba(0,107,63,0.08) 0%, rgba(201,162,39,0.08) 100%);
+  background: linear-gradient(135deg, rgba(62, 39, 35, 0.08) 0%, rgba(201, 162, 39, 0.08) 100%);
   border-radius: 50%;
-  border: 2px solid rgba(201,162,39,0.3);
+  border: 2px solid rgba(201, 162, 39, 0.3);
 }
 
 .booking-service-card h3 {
@@ -458,13 +458,13 @@ body.home .site-header .ast-container {
   border-radius: 12px;
   overflow: hidden;
   text-decoration: none;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 }
 
 .booking-package-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
 }
 
 .booking-package-image {
@@ -476,7 +476,7 @@ body.home .site-header .ast-container {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 50%);
 }
 
 .booking-package-card {
@@ -521,13 +521,13 @@ body.home .site-header .ast-container {
   background: #fff;
   padding: 32px 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   border-left: 4px solid var(--booking-gold);
   transition: all 0.3s ease;
 }
 
 .booking-trust-card:hover {
-  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
   transform: translateX(4px);
 }
 
@@ -609,7 +609,7 @@ body.home .site-header .ast-container {
   background: #fff;
   padding: 28px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid #eee;
   border-left: 4px solid var(--booking-gold);
   margin: 0;
@@ -634,7 +634,7 @@ body.home .site-header .ast-container {
 .booking-whatsapp-pro {
   width: 100%;
   max-width: 100vw;
-  background: linear-gradient(90deg, #128C7E 0%, #25D366 100%);
+  background: linear-gradient(90deg, #3E2723 0%, #281A15 100%);
   padding: 24px 0;
   box-sizing: border-box;
 }
@@ -665,23 +665,51 @@ body.home .site-header .ast-container {
   font-weight: 600;
   text-decoration: none;
   transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .booking-whatsapp-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   color: #0a5c52 !important;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .booking-top-bar { font-size: 0.8rem; padding: 8px 0; }
-  .booking-hero-pro { min-height: 460px; }
-  .booking-section-pro { padding: 56px 0; }
-  .booking-cta-group { flex-direction: column; }
-  .booking-cta-btn { justify-content: center; width: 100%; max-width: 280px; margin: 0 auto; }
-  .booking-prayer-box { padding: 24px 20px; }
-  .booking-prayer-header { flex-direction: column; text-align: center; }
-  .booking-prayer-grid { grid-template-columns: repeat(2, 1fr); }
+  .booking-top-bar {
+    font-size: 0.8rem;
+    padding: 8px 0;
+  }
+
+  .booking-hero-pro {
+    min-height: 460px;
+  }
+
+  .booking-section-pro {
+    padding: 56px 0;
+  }
+
+  .booking-cta-group {
+    flex-direction: column;
+  }
+
+  .booking-cta-btn {
+    justify-content: center;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .booking-prayer-box {
+    padding: 24px 20px;
+  }
+
+  .booking-prayer-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .booking-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

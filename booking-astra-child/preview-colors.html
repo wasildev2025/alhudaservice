@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Color Preview</title>
+    <link rel="stylesheet" href="global-styles.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: var(--booking-cream); padding: 40px; font-family: sans-serif; }
+        .demo-section { margin-bottom: 60px; }
+        .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .swatch { padding: 20px; border-radius: 12px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
+        .color-box { height: 100px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.1); }
+        
+        /* Typography Preview */
+        h1, h2, h3 { color: var(--booking-green-dark); }
+        p { color: var(--booking-text); }
+        
+        /* Button Preview */
+        .btn-preview { margin-top: 20px; }
+        
+        .booking-btn-primary {
+             background: var(--booking-green) !important;
+             color: #fff !important;
+        }
+        .booking-btn-gold {
+             background: var(--booking-gold) !important;
+             color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-section">
+        <h1>Theme Color Palette</h1>
+        <p>These are the new active colors loaded directly from <code>global-styles.css</code>.</p>
+        
+        <div class="swatch-grid">
+            <div class="swatch">
+                <div class="color-box" style="background:var(--booking-green)"></div>
+                <strong>Primary Base</strong><br>
+                <code>--booking-green</code><br>
+                Deep Antique Brown (#3E2723)
+            </div>
+            <div class="swatch">
+                <div class="color-box" style="background:var(--booking-green-dark)"></div>
+                <strong>Primary Dark</strong><br>
+                <code>--booking-green-dark</code><br>
+                Dark Coffee/Black (#281A15)
+            </div>
+            <div class="swatch">
+                <div class="color-box" style="background:var(--booking-gold)"></div>
+                <strong>Accent Gold</strong><br>
+                <code>--booking-gold</code><br>
+                Rich Gold (#C9A227)
+            </div>
+            <div class="swatch">
+                <div class="color-box" style="background:var(--booking-cream)"></div>
+                <strong>Background</strong><br>
+                <code>--booking-cream</code><br>
+                Warm Parchment (#F5F1E6)
+            </div>
+            <div class="swatch">
+                <div class="color-box" style="background:var(--booking-text)"></div>
+                <strong>Text</strong><br>
+                <code>--booking-text</code><br>
+                Dark Brown (#2C1B10)
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Component Preview</h2>
+        
+        <h3>Buttons</h3>
+        <button class="booking-btn-primary" style="padding:12px 24px; border:none; border-radius:8px; cursor:pointer;">Primary Button</button>
+        <button class="booking-btn-gold" style="padding:12px 24px; border:none; border-radius:8px; cursor:pointer; margin-left:10px;">Gold Button</button>
+        
+        <h3>Gradients</h3>
+        <div style="height:150px; width:100%; border-radius:12px; background: linear-gradient(135deg, #281A15 0%, #3E2723 40%, #5D4037 100%); display:flex; align-items:center; justify-content:center; color:white;">
+            Hero Gradient
+        </div>
+    </div>
+</body>
+</html>

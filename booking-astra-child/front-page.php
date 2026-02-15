@@ -126,7 +126,7 @@ $site_desc = get_bloginfo( 'description' );
 						$city  = get_post_meta( get_the_ID(), '_ziyarat_city', true );
 						?>
 						<a href="<?php the_permalink(); ?>" class="booking-package-card">
-							<div class="booking-package-image" style="background:<?php echo $thumb ? 'url(' . esc_url( $thumb ) . ') center/cover' : 'linear-gradient(135deg, #006B3F 0%, #028a4f 100%)'; ?>;">
+							<div class="booking-package-image" style="background:<?php echo $thumb ? 'url(' . esc_url( $thumb ) . ') center/cover' : 'linear-gradient(135deg, #3E2723 0%, #5D4037 100%)'; ?>;">
 								<?php if ( $city ) : ?><span style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.6);color:#fff;padding:4px 8px;font-size:0.75rem;border-radius:4px;"><?php echo esc_html( $city ); ?></span><?php endif; ?>
 							</div>
 							<div class="booking-package-body">

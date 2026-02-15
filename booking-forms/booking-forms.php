@@ -188,9 +188,9 @@ function booking_forms_admin_dashboard() {
 				<div class="number gold"><?php echo (int) $donations; ?></div>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-donations' ) ); ?>">View all →</a>
 			</div>
-			<div class="booking-dash-card" style="border-left-color:#006B3F;">
+			<div class="booking-dash-card" style="border-left-color:#3E2723;">
 				<h3>Total Donations (Confirmed)</h3>
-				<div class="number green">SAR <?php echo number_format( $donation_total, 0 ); ?></div>
+				<div class="number green" style="color:#3E2723 !important;">SAR <?php echo number_format( $donation_total, 0 ); ?></div>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=booking-donations' ) ); ?>">Manage →</a>
 			</div>
 		</div>

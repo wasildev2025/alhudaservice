@@ -35,9 +35,9 @@ get_header();
 	<section class="booking-page-section bg-cream">
 		<div class="booking-inner">
 			<div style="text-align:center;margin-bottom:40px;">
-				<span style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Book Now</span>
-				<h2 style="color:var(--booking-green-dark);margin:0 0 8px;">Request Your Ride</h2>
-				<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto;">Fill in the details below and we will confirm your booking via WhatsApp.</p>
+				<span style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#C9A227;margin-bottom:8px;">Book Now</span>
+				<h2 style="color:#281A15;margin:0 0 8px;">Request Your Ride</h2>
+				<p style="color:#4E342E;max-width:480px;margin:0 auto;">Fill in the details below and we will confirm your booking via WhatsApp.</p>
 			</div>
 			<?php echo do_shortcode( '[booking_pick_drop]' ); ?>
 		</div>

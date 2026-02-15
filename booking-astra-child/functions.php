@@ -48,16 +48,24 @@ function booking_astra_child_enqueue_styles() {
 		'booking-astra-child-style',
 		get_stylesheet_uri(),
 		array( 'astra-parent-style' ),
-		$theme_ver
+		time() // Force reload
 	);
 
 	/* Global design system — loaded on ALL pages */
 	wp_enqueue_style(
 		'booking-global-styles',
 		get_stylesheet_directory_uri() . '/global-styles.css',
-		array( 'booking-astra-child-style' ),
-		$theme_ver
-	);
+			array( 'booking-astra-child-style' ),
+			time() // Force reload
+		);
+		
+		// NUCLEAR OVERRIDE - Loads last
+		wp_enqueue_style( 
+			'booking-nuclear-styles', 
+			get_stylesheet_directory_uri() . '/nuclear-override.css', 
+			array( 'booking-global-styles' ), 
+			time() 
+		);
 
 	/* Home page specific styles */
 	if ( is_front_page() ) {
@@ -65,7 +73,7 @@ function booking_astra_child_enqueue_styles() {
 			'booking-home-styles',
 			get_stylesheet_directory_uri() . '/home-styles.css',
 			array( 'booking-global-styles' ),
-			$theme_ver
+			time() // Force reload for dev
 		);
 	}
 }
@@ -124,13 +132,13 @@ function booking_astra_customize_register( $wp_customize ) {
 add_filter( 'astra_theme_defaults', 'booking_astra_customizer_defaults' );
 function booking_astra_customizer_defaults( $defaults ) {
 	$defaults['ast-header-retina-logo']             = '';
-	$defaults['header-color-site-title']           = '#006B3F';
-	$defaults['header-color-site-tagline']         = '#2d2d2d';
-	$defaults['global-primary-button-bg-color']    = '#006B3F';
+	$defaults['header-color-site-title']           = '#3E2723';
+	$defaults['header-color-site-tagline']         = '#2C1B10';
+	$defaults['global-primary-button-bg-color']    = '#3E2723';
 	$defaults['global-primary-button-text-color']  = '#FFFFFF';
 	$defaults['global-primary-button-h-color']     = '#C9A227';
 	$defaults['global-primary-button-h-bg-color']  = '#C9A227';
-	$defaults['link-color']                        = '#006B3F';
+	$defaults['link-color']                        = '#3E2723';
 	$defaults['link-h-color']                     = '#C9A227';
 	return $defaults;
 }
@@ -145,3 +153,64 @@ function booking_load_v2_shortcodes() {
 		require_once $v2_file;
 	}
 }
+/* ============================================
+   FORCE INLINE VARIABLES (Cache Buster)
+   ============================================ */
+add_action( 'wp_head', 'booking_head_inline_styles', 999 );
+function booking_head_inline_styles() {
+	?>
+	<style id="booking-theme-override">
+		:root {
+			--booking-gold: #C9A227 !important;
+			--booking-gold-light: #E5C76B !important;
+			--booking-gold-dark: #9A7B1A !important;
+			--booking-green: #3E2723 !important;      /* Deep Brown */
+			--booking-green-light: #5D4037 !important;
+			--booking-green-dark: #281A15 !important;
+			--booking-white: #FFFFFF !important;
+			--booking-cream: #F5F1E6 !important;
+			--booking-bg: #EAE6DB !important;
+			--booking-text: #2C1B10 !important;
+			--booking-text-light: #4E342E !important;
+			--booking-border: #D7CCC8 !important;
+		}
+		/* Force override hardcoded Astra customizer output if any */
+		.main-header-bar, .ast-primary-header-bar { border-bottom-color: var(--booking-gold) !important; }
+		.ast-footer-overlay { background-color: var(--booking-green-dark) !important; }
+		.booking-hero-bg { background: linear-gradient(135deg, #281A15 0%, #3E2723 30%, #5D4037 70%, #8D6E63 100%) !important; }
+		.booking-whatsapp-strip { background: var(--booking-green) !important; }
+	</style>
+	<?php
+}
+
+/* ============================================
+   FORCE THEME MOD OVERRIDES (Fix DB Persistence)
+   ============================================ */
+// Header
+add_filter( 'theme_mod_header-color-site-title', function() { return '#3E2723'; } );
+add_filter( 'theme_mod_header-color-site-tagline', function() { return '#2C1B10'; } );
+
+// Global Colors
+add_filter( 'theme_mod_text-color', function() { return '#2C1B10'; } );
+add_filter( 'theme_mod_theme-color', function() { return '#3E2723'; } );
+add_filter( 'theme_mod_link-color', function() { return '#3E2723'; } );
+add_filter( 'theme_mod_link-h-color', function() { return '#C9A227'; } );
+
+// Buttons
+add_filter( 'theme_mod_button-bg-color', function() { return '#3E2723'; } );
+add_filter( 'theme_mod_button-color', function() { return '#FFFFFF'; } );
+add_filter( 'theme_mod_button-h-bg-color', function() { return '#C9A227'; } );
+add_filter( 'theme_mod_button-h-color', function() { return '#FFFFFF'; } );
+
+// Astra Global Palette (if used)
+add_filter( 'theme_mod_global-color-palette', function($palette) {
+    return array(
+        '#3E2723', // Primary
+        '#C9A227', // Secondary
+        '#2C1B10', // Text
+        '#281A15', // Extra
+        '#F5F1E6', // Inactive/bg
+        '#FFFFFF', // White
+    );
+});
+
