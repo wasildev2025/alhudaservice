@@ -27,10 +27,10 @@ $site_desc = get_bloginfo('description');
 	</div>
 
 	<!-- Hero Section — Cinematic -->
-	<section class="booking-hero-pro">
-		<div class="booking-hero-bg"></div>
+	<section class="booking-hero-pro" aria-label="Welcome to Al-Huda Services">
+		<div class="booking-hero-bg" role="presentation"></div>
 		<div class="booking-hero-content">
-			<p class="booking-bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+			<p class="booking-bismillah" lang="ar" dir="rtl">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
 			<p class="booking-hero-tagline">Bismillah Hir Rahman Nir Rahim</p>
 			<h1 class="booking-hero-title"><?php echo esc_html($site_name); ?></h1>
 			<p class="booking-hero-desc"><?php echo esc_html($site_desc); ?></p>
@@ -48,7 +48,7 @@ $site_desc = get_bloginfo('description');
 	</section>
 
 	<!-- Prayer Times -->
-	<section class="booking-section-pro booking-prayer booking-animate">
+	<section class="booking-section-pro booking-prayer booking-animate" aria-label="Prayer Times">
 		<div class="booking-container">
 			<div class="booking-prayer-box">
 				<div class="booking-prayer-header">
@@ -81,7 +81,7 @@ $site_desc = get_bloginfo('description');
 	</section>
 
 	<!-- Our Services -->
-	<section class="booking-section-pro booking-services booking-animate">
+	<section class="booking-section-pro booking-services booking-animate" aria-label="Our Services">
 		<div class="booking-container">
 			<div class="booking-section-header">
 				<span class="booking-section-label">What We Offer</span>
@@ -144,7 +144,7 @@ $site_desc = get_bloginfo('description');
 	</section>
 
 	<!-- Featured Packages -->
-	<section class="booking-section-pro booking-packages booking-animate">
+	<section class="booking-section-pro booking-packages booking-animate" aria-label="Featured Ziyarat Packages">
 		<div class="booking-container">
 			<div class="booking-section-header">
 				<span class="booking-section-label">Ziyarat</span>
