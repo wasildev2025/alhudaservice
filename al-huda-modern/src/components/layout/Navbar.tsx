@@ -35,7 +35,7 @@ export default function Navbar() {
                         <span className="text-3xl font-bold font-amiri text-primary text-glow leading-none">Al-Huda</span>
                     </div>
                     <div className="flex flex-col">
-                        <span className={`text-[10px] uppercase tracking-[0.3em] font-bold ${scrolled ? "text-primary/70" : "text-white/70"}`}>Services</span>
+                        <span className={`text-[10px] uppercase tracking-[0.3em] font-bold ${scrolled ? "text-secondary/70" : "text-primary/70"}`}>Services</span>
                     </div>
                 </Link>
 

@@ -9,7 +9,7 @@ interface PageBannerProps {
 
 export default function PageBanner({ title, subtitle }: PageBannerProps) {
     return (
-        <section className="relative h-64 md:h-80 flex items-center justify-center bg-[var(--secondary)] overflow-hidden">
+        <section className="relative h-64 md:h-80 pt-20 flex items-center justify-center bg-[var(--secondary)] overflow-hidden">
             <div className="absolute inset-0 z-0">
                 <div className="absolute inset-0 bg-black/40 z-10" />
                 <div
