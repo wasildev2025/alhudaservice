@@ -266,14 +266,21 @@ function booking_obfuscate_output($html)
 	// 4. Rewrite wp-includes/ → /assets/core/
 	$html = str_replace('/booking/wp-includes/', '/booking/assets/core/', $html);
 
-	// 5. Strip any remaining "Powered by" footer references
+	// 5. Catch-all: any remaining /wp-content/ references (e.g. inline JSON)
+	$html = str_replace('/booking/wp-content/', '/booking/assets/c/', $html);
+	$html = str_replace('/wp-content/', '/assets/c/', $html);
+
+	// 6. Hide wp-admin references from public HTML
+	$html = str_replace('/booking/wp-admin/', '/booking/app-admin/', $html);
+
+	// 7. Strip any remaining "Powered by" footer references
 	$html = preg_replace(
 		'/\|\s*Powered\s+by\s+<a[^>]*>.*?<\/a>/i',
 		'',
 		$html
 	);
 
-	// 6. Remove any remaining loose "WordPress" text in footer area
+	// 8. Remove any remaining loose "WordPress" text in footer area
 	$html = preg_replace(
 		'/Astra\s+WordPress\s+Theme/i',
 		'',
