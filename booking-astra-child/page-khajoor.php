@@ -3,7 +3,7 @@
  * Template: Khajoor — Professional Design
  * Slug: khajoor
  */
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 get_header();
 ?>
 
@@ -16,26 +16,40 @@ get_header();
 	<!-- Products Overview -->
 	<section class="booking-page-section">
 		<div style="text-align:center;margin-bottom:40px;">
-			<span style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Our Collection</span>
-			<h2 style="color:var(--booking-green-dark);margin:0 0 8px;">Premium Date Varieties</h2>
-			<p style="color:var(--booking-text-light);max-width:520px;margin:0 auto;">Hand-selected, freshly packed dates sourced directly from Madinah farms.</p>
+			<span
+				style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Our
+				Collection</span>
+			<h2 style="color:var(--booking-brown-dark);margin:0 0 8px;">Premium Date Varieties</h2>
+			<p style="color:var(--booking-text-light);max-width:520px;margin:0 auto;">Hand-selected, freshly packed
+				dates sourced directly from Madinah farms.</p>
 		</div>
 		<div class="booking-grid-3">
 			<div class="booking-card" style="text-align:center;padding:40px 24px;">
 				<div style="font-size:3rem;margin-bottom:16px;">🌴</div>
 				<h3>Ajwa</h3>
 				<p>The Prophet's (ﷺ) favorite. Premium Madinah Ajwa dates, rich and soft.</p>
-				<span style="display:inline-block;margin-top:12px;padding:6px 16px;background:var(--booking-gold);color:#fff;border-radius:20px;font-size:0.8rem;font-weight:600;">Most Popular</span>
+				<span
+					style="display:inline-block;margin-top:12px;padding:6px 16px;background:var(--booking-gold);color:#fff;border-radius:20px;font-size:0.8rem;font-weight:600;margin-bottom:12px;">Most
+					Popular</span><br>
+				<a href="<?php echo esc_url(get_option('booking_salla_store_url', '#')); ?>" target="_blank"
+					class="booking-btn booking-btn-primary" style="width:100%;font-size:0.85rem !important;">Buy on
+					Salla Store</a>
 			</div>
 			<div class="booking-card" style="text-align:center;padding:40px 24px;">
 				<div style="font-size:3rem;margin-bottom:16px;">🌴</div>
 				<h3>Safawi</h3>
 				<p>Semi-dry, dark-colored dates. Rich taste with a slightly chewy texture.</p>
+				<a href="<?php echo esc_url(get_option('booking_salla_store_url', '#')); ?>" target="_blank"
+					class="booking-btn booking-btn-outline" style="margin-top:12px;font-size:0.85rem !important;">Buy on
+					Salla Store</a>
 			</div>
 			<div class="booking-card" style="text-align:center;padding:40px 24px;">
 				<div style="font-size:3rem;margin-bottom:16px;">🌴</div>
 				<h3>Mabroom</h3>
 				<p>Elongated, soft and chewy. A premium variety loved by connoisseurs.</p>
+				<a href="<?php echo esc_url(get_option('booking_salla_store_url', '#')); ?>" target="_blank"
+					class="booking-btn booking-btn-outline" style="margin-top:12px;font-size:0.85rem !important;">Buy on
+					Salla Store</a>
 			</div>
 		</div>
 		<div class="booking-grid-2" style="margin-top:24px;">
@@ -56,32 +70,38 @@ get_header();
 	<section class="booking-page-section bg-cream">
 		<div class="booking-inner">
 			<div style="text-align:center;margin-bottom:40px;">
-				<span style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Wholesale</span>
-				<h2 style="color:var(--booking-green-dark);margin:0 0 8px;">Bulk Order Inquiry</h2>
-				<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto;">Ordering in large quantities? Get special pricing and delivery options.</p>
+				<span
+					style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Wholesale</span>
+				<h2 style="color:var(--booking-brown-dark);margin:0 0 8px;">Bulk Order Inquiry</h2>
+				<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto;">Ordering in large quantities?
+					Get special pricing and delivery options.</p>
 			</div>
-			<?php echo do_shortcode( '[booking_khajoor_bulk]' ); ?>
+			<?php echo do_shortcode('[booking_khajoor_bulk]'); ?>
 		</div>
 	</section>
 
 	<!-- Gift Box -->
 	<section class="booking-page-section">
 		<div style="text-align:center;margin-bottom:40px;">
-			<span style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Gifts</span>
-			<h2 style="color:var(--booking-green-dark);margin:0 0 8px;">Gift Box Inquiry</h2>
-			<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto;">Custom gift packaging for Hajj, Umrah, Ramadan or any special occasion.</p>
+			<span
+				style="display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--booking-gold);margin-bottom:8px;">Gifts</span>
+			<h2 style="color:var(--booking-brown-dark);margin:0 0 8px;">Gift Box Inquiry</h2>
+			<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto;">Custom gift packaging for Hajj,
+				Umrah, Ramadan or any special occasion.</p>
 		</div>
 		<div style="max-width:680px;margin:0 auto;">
-			<?php echo do_shortcode( '[booking_khajoor_gift]' ); ?>
+			<?php echo do_shortcode('[booking_khajoor_gift]'); ?>
 		</div>
 	</section>
 
 	<!-- Shop CTA -->
 	<section class="booking-page-section bg-cream">
 		<div class="booking-inner" style="text-align:center;padding:40px 24px;">
-			<h2 style="color:var(--booking-green-dark);margin:0 0 12px;">Shop Online</h2>
-			<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto 24px;">Browse our full collection on the online store. Order individual packs and gift sets with delivery.</p>
-			<a href="<?php echo esc_url( home_url( '/shop/' ) ); ?>" class="booking-btn booking-btn-gold">Visit Store</a>
+			<h2 style="color:var(--booking-brown-dark);margin:0 0 12px;">Shop Online</h2>
+			<p style="color:var(--booking-text-light);max-width:480px;margin:0 auto 24px;">Browse our full collection on
+				the online store. Order individual packs and gift sets with delivery.</p>
+			<a href="<?php echo esc_url(home_url('/shop/')); ?>" class="booking-btn booking-btn-gold">Visit
+				Store</a>
 		</div>
 	</section>
 </main>

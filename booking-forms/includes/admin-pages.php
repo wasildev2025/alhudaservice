@@ -364,6 +364,7 @@ function booking_forms_donations_page() {
 	<?php
 }
 
+function booking_forms_settings_page() {
 	if ( isset( $_POST['booking_save_settings'] ) && current_user_can( 'manage_options' ) && check_admin_referer( 'booking_settings' ) ) {
 		$opts = array( 'phone', 'whatsapp', 'email', 'working_hours', 'salla_store_url', 'shop_btn_text', 'notification_email' );
 		foreach ( $opts as $k ) {
