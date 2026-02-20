@@ -5,6 +5,8 @@ import GlassCard from "../ui/GlassCard";
 import Button from "../ui/Button";
 import Link from "next/link";
 import SectionHeader from "../ui/SectionHeader";
+import Image from "next/image";
+
 const packages = [
     {
         title: "Makkah Ziyarat",
@@ -63,14 +65,21 @@ export default function FeaturedPackages() {
                             transition={{ delay: index * 0.1, duration: 0.8 }}
                             viewport={{ once: true }}
                         >
-                            <GlassCard className="p-0 overflow-hidden flex flex-col h-full group">
+                            <GlassCard className="p-0 overflow-hidden flex flex-col h-full group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(212,175,55,0.15)]">
                                 <div className="h-72 overflow-hidden relative">
                                     <motion.div
-                                        whileHover={{ scale: 1.1 }}
+                                        whileHover={{ scale: 1.05 }}
                                         transition={{ duration: 0.8 }}
-                                        className="h-full w-full bg-cover bg-center"
-                                        style={{ backgroundImage: `url(${pkg.img})` }}
-                                    />
+                                        className="relative h-full w-full"
+                                    >
+                                        <Image
+                                            src={pkg.img}
+                                            alt={pkg.title}
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                        />
+                                    </motion.div>
                                     <div className="absolute top-6 right-6 glass-premium px-4 py-2 rounded-full">
                                         <span className="text-primary font-bold text-[10px] uppercase tracking-widest">{pkg.city}</span>
                                     </div>

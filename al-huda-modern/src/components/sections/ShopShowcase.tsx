@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import Link from "next/link";
 import { BookOpen, ShoppingBag } from "lucide-react";
 import SectionHeader from "../ui/SectionHeader";
+import Image from "next/image";
 
 export default function ShopShowcase() {
     return (
@@ -24,16 +25,23 @@ export default function ShopShowcase() {
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                         viewport={{ once: true }}
                     >
-                        <GlassCard className="p-0 overflow-hidden flex flex-col md:flex-row h-full group min-h-[450px]">
+                        <GlassCard className="p-0 overflow-hidden flex flex-col md:flex-row h-full group min-h-[450px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_80px_-20px_rgba(212,175,55,0.15)]">
                             <div
-                                className="md:w-1/2 h-80 md:h-auto overflow-hidden"
+                                className="md:w-1/2 h-80 md:h-auto overflow-hidden relative"
                             >
                                 <motion.div
-                                    whileHover={{ scale: 1.1 }}
+                                    whileHover={{ scale: 1.05 }}
                                     transition={{ duration: 0.8 }}
-                                    className="h-full w-full bg-cover bg-center"
-                                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1610450949065-1faba0d74026?auto=format&fit=crop&q=80')" }}
-                                />
+                                    className="relative h-full w-full"
+                                >
+                                    <Image
+                                        src="https://images.unsplash.com/photo-1610450949065-1faba0d74026?auto=format&fit=crop&q=80"
+                                        alt="Premium Madinah Dates"
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                    />
+                                </motion.div>
                             </div>
                             <div className="p-10 md:w-1/2 flex flex-col justify-center bg-white/5 backdrop-blur-sm">
                                 <div className="text-primary mb-8 p-4 rounded-2xl bg-primary/10 inline-block w-fit">
@@ -59,16 +67,23 @@ export default function ShopShowcase() {
                         transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         viewport={{ once: true }}
                     >
-                        <GlassCard className="p-0 overflow-hidden flex flex-col md:flex-row h-full group min-h-[450px]">
+                        <GlassCard className="p-0 overflow-hidden flex flex-col md:flex-row h-full group min-h-[450px] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_80px_-20px_rgba(212,175,55,0.15)]">
                             <div
-                                className="md:w-1/2 h-80 md:h-auto md:order-2 overflow-hidden"
+                                className="md:w-1/2 h-80 md:h-auto md:order-2 overflow-hidden relative"
                             >
                                 <motion.div
-                                    whileHover={{ scale: 1.1 }}
+                                    whileHover={{ scale: 1.05 }}
                                     transition={{ duration: 0.8 }}
-                                    className="h-full w-full bg-cover bg-center"
-                                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?auto=format&fit=crop&q=80')" }}
-                                />
+                                    className="relative h-full w-full"
+                                >
+                                    <Image
+                                        src="https://images.unsplash.com/photo-1585779034823-7e9ac8faec70?auto=format&fit=crop&q=80"
+                                        alt="Islamic Bookstore"
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                    />
+                                </motion.div>
                             </div>
                             <div className="p-10 md:w-1/2 flex flex-col justify-center md:order-1 bg-white/5 backdrop-blur-sm">
                                 <div className="text-primary mb-8 p-4 rounded-2xl bg-primary/10 inline-block w-fit">

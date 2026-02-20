@@ -5,6 +5,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { MapPin, Clock, Users, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 const packages = [
     {
@@ -60,12 +61,25 @@ export default function ZiyaratPackagesPage() {
                                 transition={{ delay: index * 0.1 }}
                                 viewport={{ once: true }}
                             >
-                                <GlassCard className="p-0 overflow-hidden flex flex-col sm:flex-row h-full border-[var(--border)] group">
+                                <GlassCard className="p-0 overflow-hidden flex flex-col sm:flex-row h-full border border-white/20 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.1)] group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_80px_-20px_rgba(212,175,55,0.15)]">
                                     <div
-                                        className="sm:w-2/5 h-64 sm:h-auto bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                        style={{ backgroundImage: `url(${pkg.img})` }}
-                                    />
-                                    <div className="p-8 sm:w-3/5 flex flex-col justify-center">
+                                        className="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden"
+                                    >
+                                        <motion.div
+                                            whileHover={{ scale: 1.05 }}
+                                            transition={{ duration: 0.8 }}
+                                            className="relative h-full w-full"
+                                        >
+                                            <Image
+                                                src={pkg.img}
+                                                alt={pkg.title}
+                                                fill
+                                                className="object-cover"
+                                                sizes="(max-width: 640px) 100vw, 40vw"
+                                            />
+                                        </motion.div>
+                                    </div>
+                                    <div className="p-8 sm:w-3/5 flex flex-col justify-center bg-white/40 backdrop-blur-md">
                                         <div className="flex items-center gap-2 text-[var(--primary)] text-xs font-bold uppercase tracking-wider mb-4">
                                             <MapPin size={14} /> {pkg.city}
                                         </div>
@@ -77,7 +91,7 @@ export default function ZiyaratPackagesPage() {
                                             <span className="flex items-center gap-1"><Clock size={14} /> {pkg.duration}</span>
                                             <span className="flex items-center gap-1"><Users size={14} /> {pkg.group}</span>
                                         </div>
-                                        <Button variant="outline" className="w-full sm:w-fit text-sm flex items-center gap-2 group/btn">
+                                        <Button variant="outline" className="w-full sm:w-fit text-sm group/btn">
                                             Request Package <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                                         </Button>
                                     </div>
@@ -95,12 +109,13 @@ export default function ZiyaratPackagesPage() {
                     <p className="text-gray-600 max-w-xl mx-auto mb-10">
                         If you want to visit specific sites or have special requirements, our guides can tailor a package just for you.
                     </p>
-                    <div className="max-w-3xl mx-auto">
-                        <GlassCard className="p-10 border-white bg-white/60">
-                            <form className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-semibold opacity-70">Package Interest</label>
-                                    <select className="p-4 rounded-xl border border-gray-200 focus:border-[var(--primary)] outline-none bg-white">
+                    <div className="max-w-3xl mx-auto relative group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 pointer-events-none" />
+                        <GlassCard className="p-10 border border-white/20 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] bg-white/40 backdrop-blur-2xl relative z-10 transition-all duration-500">
+                            <form className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6 text-left">
+                                <div className="flex flex-col gap-2 relative group/input">
+                                    <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Package Interest</label>
+                                    <select className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600 appearance-none">
                                         <option>Makkah Sites</option>
                                         <option>Madinah Sites</option>
                                         <option>Badr Tour</option>
@@ -108,20 +123,22 @@ export default function ZiyaratPackagesPage() {
                                         <option>Custom Tour</option>
                                     </select>
                                 </div>
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-semibold opacity-70">Number of Persons</label>
-                                    <input type="number" className="p-4 rounded-xl border border-gray-200 focus:border-[var(--primary)] outline-none bg-white" placeholder="2" />
+                                <div className="flex flex-col gap-2 relative group/input">
+                                    <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Number of Persons</label>
+                                    <input type="number" className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="2" />
                                 </div>
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-semibold opacity-70">Travel Date</label>
-                                    <input type="date" className="p-4 rounded-xl border border-gray-200 focus:border-[var(--primary)] outline-none bg-white" />
+                                <div className="flex flex-col gap-2 relative group/input">
+                                    <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Travel Date</label>
+                                    <input type="date" className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600" />
                                 </div>
-                                <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-semibold opacity-70">Mobile / WhatsApp</label>
-                                    <input type="tel" className="p-4 rounded-xl border border-gray-200 focus:border-[var(--primary)] outline-none bg-white" placeholder="+966 50 000 0000" />
+                                <div className="flex flex-col gap-2 relative group/input">
+                                    <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Mobile / WhatsApp</label>
+                                    <input type="tel" className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="+966 50 000 0000" />
                                 </div>
                                 <div className="md:col-span-2 mt-4">
-                                    <Button variant="primary" className="w-full py-5 text-lg shadow-lg">Send Inquiry</Button>
+                                    <Button variant="primary" className="w-full py-5 text-sm uppercase tracking-widest rounded-2xl hover:-translate-y-1">
+                                        Send Inquiry
+                                    </Button>
                                 </div>
                             </form>
                         </GlassCard>

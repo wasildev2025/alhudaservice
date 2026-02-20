@@ -40,8 +40,9 @@ export default function FAQPage() {
                 subtitle="Finding answers shouldn't be difficult. Here are some of the most common questions our customers ask."
             />
 
-            <section className="py-24 bg-white">
-                <div className="container mx-auto px-6 max-w-4xl">
+            <section className="py-24 bg-cream relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1585036156171-384164a8c675?auto=format&fit=crop&q=80')] bg-cover bg-fixed opacity-[0.03] pointer-events-none" />
+                <div className="container mx-auto px-6 max-w-4xl relative z-10">
                     <div className="space-y-4">
                         {faqs.map((faq, index) => (
                             <motion.div
@@ -52,19 +53,19 @@ export default function FAQPage() {
                                 viewport={{ once: true }}
                             >
                                 <div
-                                    className={`rounded-2xl border transition-all duration-300 overflow-hidden ${openIndex === index ? "border-[var(--primary)] bg-[var(--cream)]/30 shadow-md" : "border-gray-100 bg-white"
+                                    className={`rounded-2xl border transition-all duration-300 overflow-hidden backdrop-blur-md ${openIndex === index ? "border-primary/50 bg-white/60 shadow-[0_15px_30px_-10px_rgba(212,175,55,0.1)]" : "border-white/50 bg-white/40 hover:bg-white/50 hover:border-primary/30"
                                         }`}
                                 >
                                     <button
                                         onClick={() => setOpenIndex(openIndex === index ? null : index)}
                                         className="w-full p-6 text-left flex justify-between items-center group"
                                     >
-                                        <span className={`font-bold transition-colors ${openIndex === index ? "text-[var(--primary)]" : "text-gray-800"}`}>
+                                        <span className={`font-bold font-amiri text-lg transition-colors duration-300 ${openIndex === index ? "text-primary" : "text-secondary group-hover:text-primary"}`}>
                                             {faq.q}
                                         </span>
                                         <motion.div
                                             animate={{ rotate: openIndex === index ? 180 : 0 }}
-                                            className={`${openIndex === index ? "text-[var(--primary)]" : "text-gray-400"}`}
+                                            className={`p-2 rounded-full transition-colors duration-300 ${openIndex === index ? "bg-primary text-white" : "bg-white/50 text-secondary group-hover:bg-primary/10 group-hover:text-primary"}`}
                                         >
                                             <ChevronDown size={20} />
                                         </motion.div>
@@ -75,8 +76,9 @@ export default function FAQPage() {
                                                 initial={{ height: 0, opacity: 0 }}
                                                 animate={{ height: "auto", opacity: 1 }}
                                                 exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
                                             >
-                                                <div className="p-6 pt-0 text-gray-600 text-sm leading-relaxed border-t border-white/50">
+                                                <div className="p-6 pt-0 text-gray-600 text-sm leading-relaxed border-t border-primary/10 font-light bg-white/30">
                                                     {faq.a}
                                                 </div>
                                             </motion.div>
@@ -92,15 +94,18 @@ export default function FAQPage() {
                         whileInView={{ opacity: 1 }}
                         className="mt-20 text-center"
                     >
-                        <GlassCard className="p-12 border-[var(--border)] bg-[var(--cream)]/30">
-                            <h3 className="text-2xl font-bold font-amiri mb-4">Still Have Questions?</h3>
-                            <p className="text-gray-500 mb-8 max-w-lg mx-auto">Our support team is ready to help you with any specific inquiries or custom requests.</p>
-                            <a href="https://wa.me/966500000000" target="_blank" rel="noopener noreferrer">
-                                <Button variant="primary" className="py-4 px-10 gap-2 shadow-lg">
-                                    <MessageSquare size={18} /> Chat with us on WhatsApp
-                                </Button>
-                            </a>
-                        </GlassCard>
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 pointer-events-none" />
+                            <GlassCard className="p-12 border border-white/20 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] bg-white/50 backdrop-blur-2xl relative z-10 transition-all duration-500 hover:bg-white/60">
+                                <h3 className="text-3xl font-bold font-amiri mb-4 text-secondary">Still Have Questions?</h3>
+                                <p className="text-gray-500 mb-8 max-w-lg mx-auto font-light">Our support team is ready to help you with any specific inquiries or custom requests.</p>
+                                <a href="https://wa.me/966500000000" target="_blank" rel="noopener noreferrer">
+                                    <Button variant="primary" className="py-5 px-10 gap-3 shadow-[0_10px_20px_-10px_rgba(212,175,55,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(212,175,55,0.6)] hover:-translate-y-1 transition-all duration-300 rounded-2xl flex items-center justify-center mx-auto text-sm uppercase tracking-widest font-bold">
+                                        <MessageSquare size={18} /> Chat with us on WhatsApp
+                                    </Button>
+                                </a>
+                            </GlassCard>
+                        </div>
                     </motion.div>
                 </div>
             </section>

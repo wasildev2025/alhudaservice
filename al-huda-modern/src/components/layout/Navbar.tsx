@@ -30,9 +30,9 @@ export default function Navbar() {
                 }`}
         >
             <div className="container mx-auto px-6 flex justify-between items-center text-secondary">
-                <Link href="/" className="flex items-center gap-3 group">
-                    <div className="p-2 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <span className="text-3xl font-bold font-amiri text-primary text-glow leading-none">Al-Huda</span>
+                <Link href="/" className="flex items-center gap-3 sm:gap-4 group">
+                    <div className="p-2 sm:p-2.5 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                        <span className="text-2xl sm:text-3xl font-bold font-amiri text-primary text-glow leading-none">Al-Huda</span>
                     </div>
                     <div className="flex flex-col">
                         <span className={`text-[10px] uppercase tracking-[0.3em] font-bold ${scrolled ? "text-secondary/70" : "text-primary/70"}`}>Services</span>
@@ -78,7 +78,7 @@ export default function Navbar() {
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="lg:hidden absolute top-full left-0 right-0 glass-premium border-t border-white/10 overflow-hidden"
+                        className="lg:hidden absolute top-full left-0 right-0 glass-premium backdrop-blur-xl border-t border-white/10 overflow-hidden"
                     >
                         <div className="p-8 flex flex-col gap-6">
                             {navLinks.map((link, i) => (
