@@ -194,6 +194,7 @@ export default async function AdminDashboard() {
                                         className={`text-xs px-2 py-1 rounded-full ${statusColor[inq.status] || "bg-gray-500/20 text-gray-400"}`}
                                     >
                                         {inq.status}
+
                                     </span>
                                 </div>
                             ))}
