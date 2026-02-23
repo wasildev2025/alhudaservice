@@ -132,7 +132,10 @@ model KhajoorProduct {
   id          String  @id @default(cuid())
   name        String // Ajwa Al-Madinah, Safawi, etc.
   description String  @db.Text
-  price       String // "From 60 SAR / kg"
+  price       String // Display label: "From 60 SAR / kg"
+  priceAmount Float?  // Numeric price for sorting/filtering
+  currency    String  @default("SAR") // SAR, USD, EUR
+  unit        String  @default("kg") // kg, box, pack, piece
   image       String? // URL or uploaded path
   popular     Boolean @default(false)
   isActive    Boolean @default(true)
@@ -155,6 +158,19 @@ model KhajoorInquiry {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// ─── Testimonials (Voices of Gratitude) ────────────────────────
+model Testimonial {
+  id         String   @id @default(cuid())
+  name       String
+  location   String
+  review     String   @db.Text
+  stars      Int      @default(5)
+  isApproved Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 // ─── Contact Messages / Requests ─────────────────────────────
@@ -188,6 +204,11 @@ model AppSettings {
   instagramUrl    String?
   twitterUrl      String?
   tiktokUrl       String?
+
+  // Editable Company Stats
+  statCustomers   String? @default("10,000+")
+  statZiyarats    String? @default("500+")
+  statYears       String? @default("10+")
 
   updatedAt DateTime @updatedAt
 }

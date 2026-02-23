@@ -1,18 +1,20 @@
 import { prisma } from "@/lib/prisma";
-import { Car, MapPin, TreePalm, MessageSquare } from "lucide-react";
+import { Car, MapPin, TreePalm, MessageSquare, Star } from "lucide-react";
 
 async function getStats() {
-    const [bookings, ziyaratInquiries, khajoorInquiries, messages] =
+    const [bookings, ziyaratInquiries, khajoorInquiries, messages, testimonials] =
         await Promise.all([
             prisma.pickDropBooking.count(),
             prisma.packageInquiry.count(),
             prisma.khajoorInquiry.count(),
             prisma.contactMessage.count(),
+            prisma.testimonial.count(),
         ]);
 
-    const [pendingBookings, unreadMessages] = await Promise.all([
+    const [pendingBookings, unreadMessages, pendingTestimonials] = await Promise.all([
         prisma.pickDropBooking.count({ where: { status: "PENDING" } }),
         prisma.contactMessage.count({ where: { status: "UNREAD" } }),
+        prisma.testimonial.count({ where: { isApproved: false } }),
     ]);
 
     return {
@@ -20,8 +22,10 @@ async function getStats() {
         ziyaratInquiries,
         khajoorInquiries,
         messages,
+        testimonials,
         pendingBookings,
         unreadMessages,
+        pendingTestimonials,
     };
 }
 
@@ -73,6 +77,13 @@ export default async function AdminDashboard() {
             color: "#D4AF37",
         },
         {
+            label: "Testimonials",
+            value: stats.testimonials,
+            pending: stats.pendingTestimonials,
+            icon: Star,
+            color: "#E91E63",
+        },
+        {
             label: "Messages",
             value: stats.messages,
             pending: stats.unreadMessages,
@@ -97,7 +108,7 @@ export default async function AdminDashboard() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                 {statCards.map((card) => (
                     <div
                         key={card.label}

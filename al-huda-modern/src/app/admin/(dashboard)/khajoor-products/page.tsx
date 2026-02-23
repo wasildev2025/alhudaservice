@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TreePalm, Plus, Pencil, Trash2, X, Star, StarOff } from "lucide-react";
+import { TreePalm, Plus, Pencil, Trash2, X } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
 import Image from "next/image";
 
@@ -10,15 +10,24 @@ interface KhajoorProduct {
     name: string;
     description: string;
     price: string;
+    priceAmount: number | null;
+    currency: string;
+    unit: string;
     image: string | null;
     popular: boolean;
     isActive: boolean;
 }
 
+const currencies = ["SAR", "USD", "EUR", "GBP", "AED", "KWD", "BHD", "QAR", "OMR"];
+const units = ["kg", "500g", "250g", "box", "pack", "piece", "dozen"];
+
 const emptyForm = {
     name: "",
     description: "",
     price: "",
+    priceAmount: "" as string,
+    currency: "SAR",
+    unit: "kg",
     image: "",
     popular: false,
     isActive: true,
@@ -55,7 +64,10 @@ export default function KhajoorAdminPage() {
             const res = await fetch(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
+                body: JSON.stringify({
+                    ...form,
+                    priceAmount: form.priceAmount ? parseFloat(form.priceAmount) : null,
+                }),
             });
             const data = await res.json();
             if (data.success) {
@@ -75,6 +87,9 @@ export default function KhajoorAdminPage() {
             name: p.name,
             description: p.description,
             price: p.price,
+            priceAmount: p.priceAmount != null ? String(p.priceAmount) : "",
+            currency: p.currency || "SAR",
+            unit: p.unit || "kg",
             image: p.image || "",
             popular: p.popular,
             isActive: p.isActive,
@@ -143,6 +158,51 @@ export default function KhajoorAdminPage() {
                             <div>
                                 <label className="block text-white/70 text-sm mb-1">Price Label *</label>
                                 <input value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#D4AF37]/50" placeholder="From 60 SAR / kg" />
+                                <p className="text-white/30 text-xs mt-1 ml-1">Shown on the product card (e.g. &quot;From 60 SAR / kg&quot;)</p>
+                            </div>
+
+                            {/* Structured Price Row */}
+                            <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 space-y-3">
+                                <label className="block text-[#D4AF37]/80 text-xs uppercase tracking-wider font-semibold">Pricing Details</label>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <div>
+                                        <label className="block text-white/50 text-xs mb-1">Price</label>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            value={form.priceAmount}
+                                            onChange={(e) => setForm({ ...form, priceAmount: e.target.value })}
+                                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#D4AF37]/50"
+                                            placeholder="60"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-white/50 text-xs mb-1">Currency</label>
+                                        <select
+                                            value={form.currency}
+                                            onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#D4AF37]/50 appearance-none"
+                                        >
+                                            {currencies.map((c) => (
+                                                <option key={c} value={c} className="bg-[#0d2614]">{c}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-white/50 text-xs mb-1">Per</label>
+                                        <select
+                                            value={form.unit}
+                                            onChange={(e) => setForm({ ...form, unit: e.target.value })}
+                                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#D4AF37]/50 appearance-none"
+                                        >
+                                            {units.map((u) => (
+                                                <option key={u} value={u} className="bg-[#0d2614]">{u}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <p className="text-white/25 text-xs">Structured pricing for filtering/sorting. The Price Label above is what&apos;s displayed to customers.</p>
                             </div>
 
                             <ImageUploader value={form.image} onChange={(url) => setForm({ ...form, image: url })} label="Product Image" />
@@ -193,6 +253,9 @@ export default function KhajoorAdminPage() {
                                     <div>
                                         <h3 className="text-white font-semibold">{p.name}</h3>
                                         <p className="text-[#D4AF37] text-sm font-bold">{p.price}</p>
+                                        {p.priceAmount != null && (
+                                            <p className="text-white/30 text-xs">{p.priceAmount} {p.currency} / {p.unit}</p>
+                                        )}
                                     </div>
                                     <div className="flex gap-1">
                                         <button onClick={() => handleEdit(p)} className="p-1.5 bg-blue-500/10 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-all text-blue-400">

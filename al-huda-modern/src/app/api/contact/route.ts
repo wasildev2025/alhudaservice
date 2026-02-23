@@ -2,17 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { sendEmail, contactMessageEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/rateLimit";
 
 const contactSchema = z.object({
     name: z.string().min(2, "Name is required"),
     emailOrPhone: z.string().min(3, "Email or phone is required"),
-    message: z.string().min(5, "Message is required"),
+    message: z.string().min(5, "Message is required").max(5000, "Message too long"),
     category: z.string().optional(),
 });
 
 // POST – Submit contact message
 export async function POST(req: NextRequest) {
     try {
+        // Rate limit: 5 submissions per minute per IP
+        const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
+        const limited = rateLimit(`contact:${ip}`, { limit: 5, windowSeconds: 60 });
+        if (limited) {
+            return NextResponse.json(
+                { success: false, message: `Too many requests. Try again in ${limited.retryAfter}s.` },
+                { status: 429, headers: { "Retry-After": String(limited.retryAfter) } }
+            );
+        }
+
         const body = await req.json();
         const validated = contactSchema.parse(body);
 

@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Settings, Save, Globe, Phone, Mail, Clock, Link2, Share2, ShoppingBag } from "lucide-react";
+import {
+    Save,
+    Phone,
+    Mail,
+    Clock,
+    Globe,
+    Share2,
+    Lock,
+    ShoppingBag,
+    BarChart2,
+    Settings
+} from "lucide-react";
 
 interface AppSettings {
     id?: string;
@@ -19,6 +30,9 @@ interface AppSettings {
     instagramUrl: string;
     twitterUrl: string;
     tiktokUrl: string;
+    statCustomers: string;
+    statZiyarats: string;
+    statYears: string;
 }
 
 const defaultSettings: AppSettings = {
@@ -36,6 +50,9 @@ const defaultSettings: AppSettings = {
     instagramUrl: "",
     twitterUrl: "",
     tiktokUrl: "",
+    statCustomers: "",
+    statZiyarats: "",
+    statYears: "",
 };
 
 export default function SettingsPage() {
@@ -49,7 +66,13 @@ export default function SettingsPage() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.success && data.data) {
-                    setSettings({ ...defaultSettings, ...data.data });
+                    // Convert nulls to empty strings so controlled inputs don't get null values
+                    const merged = { ...defaultSettings };
+                    for (const key of Object.keys(merged) as (keyof AppSettings)[]) {
+                        if (key === "id") continue;
+                        merged[key] = data.data[key] ?? "" as string;
+                    }
+                    setSettings(merged);
                 }
             })
             .catch(console.error)
@@ -166,6 +189,28 @@ export default function SettingsPage() {
                     </div>
                 </div>
 
+                {/* Company Statistics */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-5">
+                    <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                        <BarChart2 size={18} className="text-[#D4AF37]" /> Company Statistics
+                    </h2>
+                    <p className="text-white/30 text-xs">These digits appear on the homepage 'Why Trust Al-Huda' section to show credibility.</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div>
+                            <label className="block text-white/60 text-xs uppercase tracking-wider mb-2">Happy Customers</label>
+                            <input value={settings.statCustomers || "10,000+"} onChange={(e) => update("statCustomers", e.target.value)} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#D4AF37]/50" placeholder="10,000+" />
+                        </div>
+                        <div>
+                            <label className="block text-white/60 text-xs uppercase tracking-wider mb-2">Ziyarats Completed</label>
+                            <input value={settings.statZiyarats || "500+"} onChange={(e) => update("statZiyarats", e.target.value)} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#D4AF37]/50" placeholder="500+" />
+                        </div>
+                        <div>
+                            <label className="block text-white/60 text-xs uppercase tracking-wider mb-2">Years of Service</label>
+                            <input value={settings.statYears || "10+"} onChange={(e) => update("statYears", e.target.value)} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#D4AF37]/50" placeholder="10+" />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Store & External Links */}
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-5">
                     <h2 className="text-lg font-semibold text-white flex items-center gap-2">
@@ -221,6 +266,91 @@ export default function SettingsPage() {
                 <button type="submit" disabled={saving} className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#D4AF37] to-[#B8941F] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#D4AF37]/25 transition-all disabled:opacity-50 text-sm">
                     <Save size={16} />
                     {saving ? "Saving..." : saved ? "Saved ✓" : "Save All Settings"}
+                </button>
+            </form>
+
+            {/* ─── Change Password ─────────────────────────────── */}
+            <ChangePasswordSection />
+        </div>
+    );
+}
+
+function ChangePasswordSection() {
+    const [pw, setPw] = useState({ current: "", newPw: "", confirm: "" });
+    const [changingSaving, setChangingSaving] = useState(false);
+    const [pwMsg, setPwMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+    const handleChangePassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setPwMsg(null);
+
+        if (pw.newPw !== pw.confirm) {
+            setPwMsg({ type: "error", text: "New passwords do not match." });
+            return;
+        }
+        if (pw.newPw.length < 8) {
+            setPwMsg({ type: "error", text: "Password must be at least 8 characters." });
+            return;
+        }
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(pw.newPw)) {
+            setPwMsg({ type: "error", text: "Must contain uppercase, lowercase, and a number." });
+            return;
+        }
+
+        setChangingSaving(true);
+        try {
+            const res = await fetch("/api/auth/change-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    currentPassword: pw.current,
+                    newPassword: pw.newPw,
+                }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setPwMsg({ type: "success", text: "Password changed successfully! 🔒" });
+                setPw({ current: "", newPw: "", confirm: "" });
+            } else {
+                setPwMsg({ type: "error", text: data.message || "Failed to change password." });
+            }
+        } catch {
+            setPwMsg({ type: "error", text: "Network error." });
+        }
+        setChangingSaving(false);
+    };
+
+    return (
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-5">
+            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Lock size={18} className="text-[#D4AF37]" /> Change Password
+            </h2>
+            <p className="text-white/30 text-xs">Must be at least 8 characters with uppercase, lowercase, and a number.</p>
+
+            {pwMsg && (
+                <div className={`p-3 rounded-xl text-sm ${pwMsg.type === "success" ? "bg-green-500/10 border border-green-500/20 text-green-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
+                    {pwMsg.text}
+                </div>
+            )}
+
+            <form onSubmit={handleChangePassword} className="space-y-4">
+                <div>
+                    <label className="block text-white/60 text-xs uppercase tracking-wider mb-2">Current Password</label>
+                    <input type="password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#D4AF37]/50" placeholder="••••••••" />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-white/60 text-xs uppercase tracking-wider mb-2">New Password</label>
+                        <input type="password" value={pw.newPw} onChange={(e) => setPw({ ...pw, newPw: e.target.value })} required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#D4AF37]/50" placeholder="••••••••" />
+                    </div>
+                    <div>
+                        <label className="block text-white/60 text-xs uppercase tracking-wider mb-2">Confirm New Password</label>
+                        <input type="password" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#D4AF37]/50" placeholder="••••••••" />
+                    </div>
+                </div>
+                <button type="submit" disabled={changingSaving} className="flex items-center gap-2 px-6 py-3 bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 font-semibold rounded-xl transition-all disabled:opacity-50 text-sm">
+                    <Lock size={14} />
+                    {changingSaving ? "Changing..." : "Change Password"}
                 </button>
             </form>
         </div>

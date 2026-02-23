@@ -32,7 +32,10 @@ function getImage(pkg: ZiyaratPackage) {
         try {
             const imgs = JSON.parse(pkg.images);
             if (Array.isArray(imgs) && imgs.length > 0) return imgs[0];
-        } catch { /* ignore */ }
+            if (typeof pkg.images === 'string' && pkg.images.startsWith("http")) return pkg.images;
+        } catch {
+            if (pkg.images.startsWith("http") || pkg.images.startsWith("/")) return pkg.images;
+        }
     }
     return cityImages[pkg.city] || cityImages.Makkah;
 }
@@ -58,18 +61,15 @@ export default function FeaturedPackages() {
     return (
         <section className="py-32 bg-background relative overflow-hidden">
             <div className="container mx-auto px-6">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-                    <div className="flex-1">
-                        <SectionHeader
-                            center={false}
-                            title="Spiritual Journeys"
-                            subtitle="Carefully curated Ziyarat packages designed to provide a deep, meaningful connection with the heritage of Islam."
-                        />
-                    </div>
+                <div className="flex flex-col items-center text-center mb-16 gap-6 relative">
+                    <SectionHeader
+                        center={true}
+                        title="Spiritual Journeys"
+                        subtitle="Carefully curated Ziyarat packages designed to provide a deep, meaningful connection with the heritage of Islam."
+                    />
                     <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        className="hidden md:block pb-24"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                     >
                         <Link href="/ziyarat-packages">
                             <Button variant="outline" className="px-10 py-4 rounded-full text-xs uppercase tracking-widest font-bold">

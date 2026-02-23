@@ -33,6 +33,7 @@ const navItems = [
     { href: "/admin/packages", label: "Packages", icon: Package },
     { href: "/admin/khajoor-products", label: "Khajoor Products", icon: Leaf },
     { href: "/admin/khajoor", label: "Khajoor Inquiries", icon: TreePalm },
+    { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquare },
     { href: "/admin/messages", label: "Inquiries & Messages", icon: MessageSquare, badgeKey: "unreadMessages" as const },
     { href: "/admin/settings", label: "Settings", icon: Settings },
 ];

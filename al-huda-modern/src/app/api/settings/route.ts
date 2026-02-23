@@ -19,7 +19,28 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { contactPhone, whatsappNumber, contactEmail, workingHours, featuredItems } = body;
+
+        // All saveable fields
+        const data = {
+            contactPhone: body.contactPhone ?? null,
+            whatsappNumber: body.whatsappNumber ?? null,
+            contactEmail: body.contactEmail ?? null,
+            workingHours: body.workingHours ?? null,
+            featuredItems: body.featuredItems ?? null,
+            siteTitle: body.siteTitle ?? null,
+            siteDescription: body.siteDescription ?? null,
+            sallaStoreUrl: body.sallaStoreUrl ?? null,
+            sallaBooksUrl: body.sallaBooksUrl ?? null,
+            sallaDatesUrl: body.sallaDatesUrl ?? null,
+            sallaDonationsUrl: body.sallaDonationsUrl ?? null,
+            facebookUrl: body.facebookUrl ?? null,
+            instagramUrl: body.instagramUrl ?? null,
+            twitterUrl: body.twitterUrl ?? null,
+            tiktokUrl: body.tiktokUrl ?? null,
+            statCustomers: body.statCustomers ?? "10,000+",
+            statZiyarats: body.statZiyarats ?? "500+",
+            statYears: body.statYears ?? "10+",
+        };
 
         // Upsert – find existing or create new
         const existing = await prisma.appSettings.findFirst();
@@ -28,12 +49,10 @@ export async function POST(req: NextRequest) {
         if (existing) {
             settings = await prisma.appSettings.update({
                 where: { id: existing.id },
-                data: { contactPhone, whatsappNumber, contactEmail, workingHours, featuredItems },
+                data,
             });
         } else {
-            settings = await prisma.appSettings.create({
-                data: { contactPhone, whatsappNumber, contactEmail, workingHours, featuredItems },
-            });
+            settings = await prisma.appSettings.create({ data });
         }
 
         return NextResponse.json({ success: true, data: settings });

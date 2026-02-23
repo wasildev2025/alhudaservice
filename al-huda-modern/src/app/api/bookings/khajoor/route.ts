@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { sendEmail, khajoorInquiryEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/rateLimit";
 
 const khajoorSchema = z.object({
     fullName: z.string().min(2, "Name is required"),
@@ -10,12 +11,21 @@ const khajoorSchema = z.object({
     requiredType: z.string().min(1, "Type is required"),
     quantity: z.string().min(1, "Quantity is required"),
     deliveryCity: z.string().min(1, "Delivery city is required"),
-    notes: z.string().optional(),
+    notes: z.string().max(2000).optional(),
 });
 
 // POST – Create new khajoor inquiry
 export async function POST(req: NextRequest) {
     try {
+        const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
+        const limited = rateLimit(`khajoor-inq:${ip}`, { limit: 5, windowSeconds: 60 });
+        if (limited) {
+            return NextResponse.json(
+                { success: false, message: `Too many requests. Try again in ${limited.retryAfter}s.` },
+                { status: 429, headers: { "Retry-After": String(limited.retryAfter) } }
+            );
+        }
+
         const body = await req.json();
         const validated = khajoorSchema.parse(body);
 

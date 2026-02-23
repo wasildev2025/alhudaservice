@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { sendEmail, packageInquiryEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/rateLimit";
 
 const inquirySchema = z.object({
     fullName: z.string().min(2, "Name is required"),
@@ -10,13 +11,22 @@ const inquirySchema = z.object({
     pickupLocation: z.string().min(2, "Pickup location is required"),
     date: z.string().min(1, "Date is required"),
     persons: z.number().min(1, "At least 1 person"),
-    notes: z.string().optional(),
+    notes: z.string().max(2000).optional(),
     packageId: z.string().min(1, "Package is required"),
 });
 
 // POST – Create new package inquiry
 export async function POST(req: NextRequest) {
     try {
+        const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
+        const limited = rateLimit(`ziyarat-inq:${ip}`, { limit: 5, windowSeconds: 60 });
+        if (limited) {
+            return NextResponse.json(
+                { success: false, message: `Too many requests. Try again in ${limited.retryAfter}s.` },
+                { status: 429, headers: { "Retry-After": String(limited.retryAfter) } }
+            );
+        }
+
         const body = await req.json();
         const validated = inquirySchema.parse(body);
 

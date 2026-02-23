@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 
-// PUT – Update product
+const khajoorUpdateSchema = z.object({
+    name: z.string().min(2),
+    description: z.string().min(5),
+    price: z.string().min(1),
+    priceAmount: z.number().nullable().optional(),
+    currency: z.string().default("SAR"),
+    unit: z.string().default("kg"),
+    image: z.string().nullable().optional(),
+    popular: z.boolean().default(false),
+    isActive: z.boolean().default(true),
+});
+
+// PUT – Update product (admin – protected by middleware)
 export async function PUT(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -9,19 +22,30 @@ export async function PUT(
     try {
         const { id } = await params;
         const body = await req.json();
+        const validated = khajoorUpdateSchema.parse(body);
+
         const product = await prisma.khajoorProduct.update({
             where: { id },
             data: {
-                name: body.name,
-                description: body.description,
-                price: body.price,
-                image: body.image || null,
-                popular: body.popular || false,
-                isActive: body.isActive !== false,
+                name: validated.name,
+                description: validated.description,
+                price: validated.price,
+                priceAmount: validated.priceAmount || null,
+                currency: validated.currency,
+                unit: validated.unit,
+                image: validated.image || null,
+                popular: validated.popular,
+                isActive: validated.isActive,
             },
         });
         return NextResponse.json({ success: true, data: product });
     } catch (error) {
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { success: false, errors: error.errors },
+                { status: 400 }
+            );
+        }
         console.error("Update khajoor error:", error);
         return NextResponse.json(
             { success: false, message: "Failed to update product" },
@@ -30,7 +54,7 @@ export async function PUT(
     }
 }
 
-// DELETE – Delete product
+// DELETE – Delete product (admin – protected by middleware)
 export async function DELETE(
     _req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
