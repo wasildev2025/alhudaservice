@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Auth.js (NextAuth v5) Models ────────────────────────────
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("USER") // USER | ADMIN
+
+  accounts Account[]
+  sessions Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Ziyarat Packages ────────────────────────────────────────
+model ZiyaratPackage {
+  id           String  @id @default(cuid())
+  name         String // e.g. "Makkah Ziyarat – Half Day"
+  city         String // Makkah / Madinah / Taif / Badr
+  duration     String // e.g. "4 hours" or "2 days"
+  price        Float
+  currency     String  @default("SAR")
+  includes     String  @db.Text // comma-separated or JSON
+  excludes     String  @db.Text
+  itinerary    String  @db.Text // bullet points
+  pickupRules  String? @db.Text
+  images       String? @db.Text // JSON array of URLs
+  availability String?
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  inquiries PackageInquiry[]
+}
+
+// ─── Pick & Drop Bookings ────────────────────────────────────
+model PickDropBooking {
+  id             String   @id @default(cuid())
+  fullName       String
+  mobile         String
+  whatsapp       String?
+  pickupLocation String
+  dropLocation   String
+  date           String
+  time           String
+  passengers     Int
+  vehicleType    String?
+  luggage        Boolean  @default(false)
+  notes          String?  @db.Text
+  status         String   @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Ziyarat Package Inquiry ─────────────────────────────────
+model PackageInquiry {
+  id             String @id @default(cuid())
+  fullName       String
+  mobile         String
+  whatsapp       String?
+  pickupLocation String
+  date           String
+  persons        Int
+  notes          String? @db.Text
+  status         String  @default("PENDING")
+
+  packageId String
+  package   ZiyaratPackage @relation(fields: [packageId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Bulk Khajoor Inquiry ────────────────────────────────────
+model KhajoorInquiry {
+  id           String  @id @default(cuid())
+  fullName     String
+  mobile       String
+  whatsapp     String?
+  requiredType String // Ajwa, Safawi, Mabroom
+  quantity     String // kg / boxes
+  deliveryCity String
+  notes        String? @db.Text
+  status       String  @default("PENDING")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Contact Messages ────────────────────────────────────────
+model ContactMessage {
+  id           String @id @default(cuid())
+  name         String
+  emailOrPhone String
+  message      String @db.Text
+  status       String @default("UNREAD") // UNREAD | READ | REPLIED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── App Settings (singleton row) ────────────────────────────
+model AppSettings {
+  id             String  @id @default(cuid())
+  contactPhone   String?
+  whatsappNumber String?
+  contactEmail   String?
+  workingHours   String?
+  featuredItems  String? @db.Text // JSON
+
+  updatedAt DateTime @updatedAt
+}
