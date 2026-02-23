@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Package, Plus, Pencil, Trash2, X } from "lucide-react";
+import ImageUploader from "@/components/admin/ImageUploader";
+import Image from "next/image";
 
 interface ZiyaratPackage {
     id: string;
@@ -14,6 +16,7 @@ interface ZiyaratPackage {
     excludes: string;
     itinerary: string;
     pickupRules?: string;
+    images?: string;
     availability?: string;
     isActive: boolean;
 }
@@ -28,6 +31,7 @@ const emptyForm = {
     excludes: "",
     itinerary: "",
     pickupRules: "",
+    images: "",
     availability: "",
     isActive: true,
 };
@@ -91,6 +95,7 @@ export default function PackagesAdminPage() {
             excludes: pkg.excludes,
             itinerary: pkg.itinerary,
             pickupRules: pkg.pickupRules || "",
+            images: pkg.images || "",
             availability: pkg.availability || "",
             isActive: pkg.isActive,
         });
@@ -277,6 +282,12 @@ export default function PackagesAdminPage() {
                                 />
                             </div>
 
+                            <ImageUploader
+                                value={form.images}
+                                onChange={(url) => setForm({ ...form, images: url })}
+                                label="Package Image"
+                            />
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-white/70 text-sm mb-1">
@@ -358,39 +369,47 @@ export default function PackagesAdminPage() {
                     {packages.map((pkg) => (
                         <div
                             key={pkg.id}
-                            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:bg-white/[0.07] transition-all"
+                            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:bg-white/[0.07] transition-all"
                         >
-                            <div className="flex items-start justify-between mb-3">
-                                <div>
-                                    <h3 className="text-white font-semibold">{pkg.name}</h3>
-                                    <p className="text-white/50 text-sm">
-                                        {pkg.city} • {pkg.duration}
-                                    </p>
+                            {pkg.images && (
+                                <div className="relative h-32">
+                                    <Image src={pkg.images} alt={pkg.name} fill className="object-cover" sizes="300px" />
                                 </div>
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => handleEdit(pkg)}
-                                        className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-all text-blue-400"
-                                    >
-                                        <Pencil size={14} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(pkg.id)}
-                                        className="p-2 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-all text-red-400"
-                                    >
-                                        <Trash2 size={14} />
-                                    </button>
+                            )}
+                            <div className="p-5">
+                                <div className="flex items-start justify-between mb-3">
+                                    <div>
+                                        <h3 className="text-white font-semibold">{pkg.name}</h3>
+                                        <p className="text-white/50 text-sm">
+                                            {pkg.city} • {pkg.duration}
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleEdit(pkg)}
+                                            className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-all text-blue-400"
+                                        >
+                                            <Pencil size={14} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(pkg.id)}
+                                            className="p-2 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-all text-red-400"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <p className="text-[#D4AF37] font-bold text-lg">
-                                {pkg.price} {pkg.currency}
-                            </p>
-                            <div className="flex gap-2 mt-3">
-                                <span
-                                    className={`text-xs px-2 py-1 rounded-full ${pkg.isActive ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}
-                                >
-                                    {pkg.isActive ? "Active" : "Inactive"}
-                                </span>
+                                <p className="text-[#D4AF37] font-bold text-lg">
+                                    {pkg.price} {pkg.currency}
+                                </p>
+                                <div className="flex gap-2 mt-3">
+                                    <span
+                                        className={`text-xs px-2 py-1 rounded-full ${pkg.isActive ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}
+                                    >
+                                        {pkg.isActive ? "Active" : "Inactive"}
+                                    </span>
+                                    {!pkg.images && <span className="text-xs px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-400">No Image</span>}
+                                </div>
                             </div>
                         </div>
                     ))}

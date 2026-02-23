@@ -1,9 +1,57 @@
+"use client";
+
+import { useState } from "react";
 import PageBanner from "@/components/ui/PageBanner";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import { Plane, Hotel, Users, CheckCircle, Calendar, MapPin, Car } from "lucide-react";
 
 export default function PickDropPage() {
+    const [form, setForm] = useState({
+        fullName: "",
+        mobile: "",
+        pickupLocation: "",
+        dropLocation: "",
+        date: "",
+        time: "09:00",
+        passengers: 1,
+        vehicleType: "Sedan (4 Seater)",
+        notes: "",
+    });
+    const [submitting, setSubmitting] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setError("");
+        setSuccess(false);
+        try {
+            const res = await fetch("/api/bookings/pick-drop", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setSuccess(true);
+                setForm({
+                    fullName: "", mobile: "", pickupLocation: "", dropLocation: "",
+                    date: "", time: "09:00", passengers: 1, vehicleType: "Sedan (4 Seater)", notes: "",
+                });
+            } else {
+                setError(data.message || "Something went wrong. Please try again.");
+            }
+        } catch {
+            setError("Network error. Please check your connection.");
+        }
+        setSubmitting(false);
+    };
+
+    const update = (field: string, value: string | number) =>
+        setForm((prev) => ({ ...prev, [field]: value }));
+
     return (
         <>
             <PageBanner
@@ -69,22 +117,33 @@ export default function PickDropPage() {
                                     <h3 className="text-3xl font-bold font-amiri mb-2 text-primary">Request Your Ride</h3>
                                     <p className="text-sm text-gray-500 mb-8 font-light">Enter your details below and we will confirm your booking instantly via WhatsApp.</p>
 
-                                    <form className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6">
+                                    {success && (
+                                        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl text-green-700 text-sm">
+                                            ✅ <strong>Booking submitted successfully!</strong> We will contact you via WhatsApp shortly.
+                                        </div>
+                                    )}
+                                    {error && (
+                                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
+                                            ❌ {error}
+                                        </div>
+                                    )}
+
+                                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6">
                                         <div className="flex flex-col gap-2 relative group/input">
                                             <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Full Name</label>
-                                            <input type="text" className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="e.g. Abdullah Khan" />
+                                            <input type="text" required value={form.fullName} onChange={(e) => update("fullName", e.target.value)} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="e.g. Abdullah Khan" />
                                         </div>
 
                                         <div className="flex flex-col gap-2 relative group/input">
                                             <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Mobile / WhatsApp</label>
-                                            <input type="tel" className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="+966 50 000 0000" />
+                                            <input type="tel" required value={form.mobile} onChange={(e) => update("mobile", e.target.value)} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="+966 50 000 0000" />
                                         </div>
 
                                         <div className="flex flex-col gap-2 relative group/input">
                                             <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Pickup Location</label>
                                             <div className="relative">
                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><MapPin size={18} /></div>
-                                                <input type="text" className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="e.g. Jeddah Airport Terminal 1" />
+                                                <input type="text" required value={form.pickupLocation} onChange={(e) => update("pickupLocation", e.target.value)} className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="e.g. Jeddah Airport Terminal 1" />
                                             </div>
                                         </div>
 
@@ -92,7 +151,7 @@ export default function PickDropPage() {
                                             <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Drop Location</label>
                                             <div className="relative">
                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><MapPin size={18} /></div>
-                                                <input type="text" className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="e.g. Pullman Zamzam Hotel" />
+                                                <input type="text" required value={form.dropLocation} onChange={(e) => update("dropLocation", e.target.value)} className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="e.g. Pullman Zamzam Hotel" />
                                             </div>
                                         </div>
 
@@ -100,7 +159,7 @@ export default function PickDropPage() {
                                             <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Travel Date</label>
                                             <div className="relative">
                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Calendar size={18} /></div>
-                                                <input type="date" className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600" />
+                                                <input type="date" required value={form.date} onChange={(e) => update("date", e.target.value)} className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600" />
                                             </div>
                                         </div>
 
@@ -108,7 +167,7 @@ export default function PickDropPage() {
                                             <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Vehicle Type</label>
                                             <div className="relative">
                                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"><Car size={18} /></div>
-                                                <select className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600 appearance-none">
+                                                <select value={form.vehicleType} onChange={(e) => update("vehicleType", e.target.value)} className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600 appearance-none">
                                                     <option>Sedan (4 Seater)</option>
                                                     <option>SUV (5 Seater)</option>
                                                     <option>Van (7 Seater)</option>
@@ -120,12 +179,12 @@ export default function PickDropPage() {
 
                                         <div className="md:col-span-2 flex flex-col gap-2 relative group/input">
                                             <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Additional Notes (Optional)</label>
-                                            <textarea rows={3} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm resize-none" placeholder="Any special requests or luggage details..."></textarea>
+                                            <textarea rows={3} value={form.notes} onChange={(e) => update("notes", e.target.value)} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm resize-none" placeholder="Any special requests or luggage details..."></textarea>
                                         </div>
 
                                         <div className="md:col-span-2 mt-2">
-                                            <Button variant="primary" className="w-full py-5 text-sm uppercase tracking-widest font-bold shadow-[0_10px_20px_-10px_rgba(212,175,55,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(212,175,55,0.6)] hover:-translate-y-1 transition-all duration-300 rounded-2xl">
-                                                Submit Booking Request
+                                            <Button type="submit" variant="primary" className="w-full py-5 text-sm uppercase tracking-widest font-bold shadow-[0_10px_20px_-10px_rgba(212,175,55,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(212,175,55,0.6)] hover:-translate-y-1 transition-all duration-300 rounded-2xl disabled:opacity-50" disabled={submitting}>
+                                                {submitting ? "Submitting..." : "Submit Booking Request"}
                                             </Button>
                                             <p className="text-center text-xs text-secondary/50 mt-4 font-medium">By submitting, you agree to be contacted via WhatsApp for confirmation.</p>
                                         </div>

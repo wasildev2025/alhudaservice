@@ -1,34 +1,54 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import PageBanner from "@/components/ui/PageBanner";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
 import { ExternalLink, Book, ShoppingBag, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 
-const categories = [
-    {
-        name: "Islamic Books",
-        desc: "Quran, Hadith collections, and children's Islamic books.",
-        icon: <Book size={32} />,
-        href: "#", // Salla URL
-    },
-    {
-        name: "Premium Dates",
-        desc: "Ajwa, Safawi, and specialized Madinah date gifts.",
-        icon: <ShoppingBag size={32} />,
-        href: "/khajoor",
-    },
-    {
-        name: "Donation Packs",
-        desc: "Sponsor meals or contribute to mosque maintenance.",
-        icon: <Heart size={32} />,
-        href: "/donations",
-    },
-];
+interface SiteSettings {
+    sallaStoreUrl?: string;
+    sallaBooksUrl?: string;
+    sallaDatesUrl?: string;
+    sallaDonationsUrl?: string;
+}
 
 export default function ShopPage() {
-    const sallaUrl = "https://salla.sa/al-huda"; // Example
+    const [settings, setSettings] = useState<SiteSettings>({});
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        fetch("/api/settings")
+            .then((r) => r.json())
+            .then((data) => {
+                if (data.success && data.data) setSettings(data.data);
+            })
+            .catch(console.error)
+            .finally(() => setLoaded(true));
+    }, []);
+
+    const sallaUrl = settings.sallaStoreUrl || "#";
+    const categories = [
+        {
+            name: "Islamic Books",
+            desc: "Quran, Hadith collections, and children's Islamic books.",
+            icon: <Book size={32} />,
+            href: settings.sallaBooksUrl || sallaUrl,
+        },
+        {
+            name: "Premium Dates",
+            desc: "Ajwa, Safawi, and specialized Madinah date gifts.",
+            icon: <ShoppingBag size={32} />,
+            href: settings.sallaDatesUrl || "/khajoor",
+        },
+        {
+            name: "Donation Packs",
+            desc: "Sponsor meals or contribute to mosque maintenance.",
+            icon: <Heart size={32} />,
+            href: settings.sallaDonationsUrl || "/donations",
+        },
+    ];
 
     return (
         <>
@@ -47,7 +67,7 @@ export default function ShopPage() {
                         <p className="text-gray-600 mb-10 text-lg">
                             We use the Salla platform to ensure secure payments, reliable delivery tracking, and a smooth shopping experience for our customers across the Kingdom.
                         </p>
-                        <a href={sallaUrl} target="_blank" rel="noopener noreferrer">
+                        <a href={sallaUrl} target={sallaUrl !== "#" ? "_blank" : undefined} rel="noopener noreferrer">
                             <Button variant="primary" className="py-5 px-12 text-sm uppercase tracking-widest rounded-2xl">
                                 <ExternalLink size={20} /> Go to Salla Store
                             </Button>
@@ -64,18 +84,25 @@ export default function ShopPage() {
                                 transition={{ delay: index * 0.1 }}
                                 viewport={{ once: true }}
                             >
-                                <GlassCard className="p-8 h-full flex flex-col items-center text-center border border-white/20 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(212,175,55,0.15)] bg-white/40 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 group">
-                                    <div className="p-4 rounded-xl bg-primary/10 text-primary mb-6 transition-transform group-hover:scale-110 duration-300">
-                                        {cat.icon}
-                                    </div>
-                                    <h3 className="text-xl font-bold font-amiri mb-4 text-secondary group-hover:text-primary transition-colors">{cat.name}</h3>
-                                    <p className="text-gray-500 text-sm mb-6 flex-1">
-                                        {cat.desc}
-                                    </p>
-                                    <Button variant="ghost" className="text-primary text-xs uppercase tracking-widest group-hover:gap-3">
-                                        Browse Category <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                                    </Button>
-                                </GlassCard>
+                                <a
+                                    href={cat.href}
+                                    target={cat.href.startsWith("http") ? "_blank" : undefined}
+                                    rel={cat.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                                    className="block h-full"
+                                >
+                                    <GlassCard className="p-8 h-full flex flex-col items-center text-center border border-white/20 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(212,175,55,0.15)] bg-white/40 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
+                                        <div className="p-4 rounded-xl bg-primary/10 text-primary mb-6 transition-transform group-hover:scale-110 duration-300">
+                                            {cat.icon}
+                                        </div>
+                                        <h3 className="text-xl font-bold font-amiri mb-4 text-secondary group-hover:text-primary transition-colors">{cat.name}</h3>
+                                        <p className="text-gray-500 text-sm mb-6 flex-1">
+                                            {cat.desc}
+                                        </p>
+                                        <Button variant="ghost" className="text-primary text-xs uppercase tracking-widest group-hover:gap-3 pointer-events-none">
+                                            Browse Category <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                        </Button>
+                                    </GlassCard>
+                                </a>
                             </motion.div>
                         ))}
                     </div>

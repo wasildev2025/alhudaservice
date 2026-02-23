@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import PageBanner from "@/components/ui/PageBanner";
 import GlassCard from "@/components/ui/GlassCard";
 import Button from "@/components/ui/Button";
@@ -25,6 +26,47 @@ const causes = [
 ];
 
 export default function DonationsPage() {
+    const [form, setForm] = useState({
+        donationType: "Sadaqah (General)",
+        amount: "",
+        name: "",
+        whatsapp: "",
+        duaRequest: "",
+    });
+    const [submitting, setSubmitting] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState("");
+
+    const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setError("");
+        setSuccess(false);
+        try {
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: form.name || "Anonymous Donor",
+                    emailOrPhone: form.whatsapp,
+                    message: `[Donation Request] Type: ${form.donationType}, Amount: ${form.amount} SAR${form.duaRequest ? `, Dua Request: ${form.duaRequest}` : ""}`,
+                }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setSuccess(true);
+                setForm({ donationType: "Sadaqah (General)", amount: "", name: "", whatsapp: "", duaRequest: "" });
+            } else {
+                setError(data.message || "Something went wrong.");
+            }
+        } catch {
+            setError("Network error. Please try again.");
+        }
+        setSubmitting(false);
+    };
+
     return (
         <>
             <PageBanner
@@ -90,13 +132,24 @@ export default function DonationsPage() {
                             <h2 className="text-3xl font-bold font-amiri mb-4 text-primary text-center">Make a Contribution</h2>
                             <p className="text-center text-gray-500 mb-10 text-sm font-light">Please select a cause and amount. We will contact you or provide a payment link to complete the donation.</p>
 
-                            <form className="space-y-6 text-left">
+                            {success && (
+                                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl text-green-700 text-sm">
+                                    ✅ <strong>Contribution request sent!</strong> We will contact you with payment details.
+                                </div>
+                            )}
+                            {error && (
+                                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm">
+                                    ❌ {error}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit} className="space-y-6 text-left">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6">
                                     <div className="flex flex-col gap-2 relative group/input">
                                         <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Donation Type</label>
                                         <div className="relative">
                                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary opacity-70"><Heart size={18} /></div>
-                                            <select className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600 appearance-none">
+                                            <select value={form.donationType} onChange={(e) => update("donationType", e.target.value)} className="w-full p-4 pl-12 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm text-gray-600 appearance-none">
                                                 <option>Sadaqah (General)</option>
                                                 <option>Zakat</option>
                                                 <option>Iftar Sponsorship</option>
@@ -109,7 +162,7 @@ export default function DonationsPage() {
                                         <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Amount (SAR)</label>
                                         <div className="relative">
                                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">﷼</div>
-                                            <input type="number" className="w-full p-4 pl-10 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="100" />
+                                            <input type="number" required value={form.amount} onChange={(e) => update("amount", e.target.value)} className="w-full p-4 pl-10 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="100" />
                                         </div>
                                     </div>
                                 </div>
@@ -117,22 +170,22 @@ export default function DonationsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-6">
                                     <div className="flex flex-col gap-2 relative group/input">
                                         <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Your Name (Optional)</label>
-                                        <input type="text" className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="Full Name" />
+                                        <input type="text" value={form.name} onChange={(e) => update("name", e.target.value)} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="Full Name" />
                                     </div>
 
                                     <div className="flex flex-col gap-2 relative group/input">
                                         <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">WhatsApp Number</label>
-                                        <input type="tel" className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="+966 50 000 0000" />
+                                        <input type="tel" required value={form.whatsapp} onChange={(e) => update("whatsapp", e.target.value)} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm" placeholder="+966 50 000 0000" />
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col gap-2 relative group/input">
                                     <label className="text-xs font-bold uppercase tracking-widest text-secondary/70 ml-1 transition-colors group-focus-within/input:text-primary">Message / Special Dua Request</label>
-                                    <textarea rows={3} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm resize-none" placeholder="If you'd like us to make a specific dua at the Holy Sites..."></textarea>
+                                    <textarea rows={3} value={form.duaRequest} onChange={(e) => update("duaRequest", e.target.value)} className="w-full p-4 rounded-2xl border-2 border-white/50 bg-white/50 transition-all duration-300 focus:bg-white focus:border-primary focus:shadow-[0_0_0_4px_rgba(212,175,55,0.1)] outline-none backdrop-blur-sm resize-none" placeholder="If you'd like us to make a specific dua at the Holy Sites..."></textarea>
                                 </div>
 
-                                <Button variant="primary" className="w-full py-5 text-sm uppercase tracking-widest font-bold shadow-[0_10px_20px_-10px_rgba(212,175,55,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(212,175,55,0.6)] hover:-translate-y-1 transition-all duration-300 rounded-2xl mt-4 flex justify-center items-center gap-3">
-                                    <Heart size={20} className="fill-current" /> Submit Contribution Request
+                                <Button type="submit" variant="primary" className="w-full py-5 text-sm uppercase tracking-widest font-bold shadow-[0_10px_20px_-10px_rgba(212,175,55,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(212,175,55,0.6)] hover:-translate-y-1 transition-all duration-300 rounded-2xl mt-4 flex justify-center items-center gap-3 disabled:opacity-50" disabled={submitting}>
+                                    <Heart size={20} className="fill-current" /> {submitting ? "Submitting..." : "Submit Contribution Request"}
                                 </Button>
                             </form>
                         </GlassCard>

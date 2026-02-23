@@ -35,7 +35,7 @@ export default function ShopShowcase() {
                                     className="relative h-full w-full"
                                 >
                                     <Image
-                                        src="https://images.unsplash.com/photo-1610450949065-1faba0d74026?auto=format&fit=crop&q=80"
+                                        src="/images/dates/ajwa.png"
                                         alt="Premium Madinah Dates"
                                         fill
                                         className="object-cover"

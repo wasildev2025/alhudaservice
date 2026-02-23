@@ -7,6 +7,7 @@ const contactSchema = z.object({
     name: z.string().min(2, "Name is required"),
     emailOrPhone: z.string().min(3, "Email or phone is required"),
     message: z.string().min(5, "Message is required"),
+    category: z.string().optional(),
 });
 
 // POST – Submit contact message
@@ -15,8 +16,20 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const validated = contactSchema.parse(body);
 
+        // Auto-detect category if not provided
+        let category = validated.category || "General";
+        if (!validated.category) {
+            if (validated.message.includes("[Donation")) category = "Donation";
+            else if (validated.message.includes("[Custom Ziyarat") || validated.message.includes("[Ziyarat")) category = "Ziyarat Custom";
+        }
+
         const msg = await prisma.contactMessage.create({
-            data: validated,
+            data: {
+                name: validated.name,
+                emailOrPhone: validated.emailOrPhone,
+                message: validated.message,
+                category,
+            },
         });
 
         // Send admin notification

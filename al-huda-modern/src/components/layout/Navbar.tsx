@@ -12,6 +12,7 @@ const navLinks = [
     { name: "Khajoor", href: "/khajoor" },
     { name: "Shop", href: "/shop" },
     { name: "Donations", href: "/donations" },
+    { name: "Contact Us", href: "/contact-us" },
 ];
 
 export default function Navbar() {

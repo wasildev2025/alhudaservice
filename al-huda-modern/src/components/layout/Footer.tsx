@@ -1,7 +1,38 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, Phone, MapPin, Instagram, Facebook, Twitter } from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface SiteSettings {
+    contactPhone?: string;
+    contactEmail?: string;
+    facebookUrl?: string;
+    instagramUrl?: string;
+    twitterUrl?: string;
+}
 
 export default function Footer() {
+    const [settings, setSettings] = useState<SiteSettings>({});
+
+    useEffect(() => {
+        fetch("/api/settings")
+            .then((r) => r.json())
+            .then((data) => {
+                if (data.success && data.data) setSettings(data.data);
+            })
+            .catch(() => { });
+    }, []);
+
+    const phone = settings.contactPhone || "+966 50 000 0000";
+    const email = settings.contactEmail || "info@alhudaservices.com";
+
+    const socialLinks = [
+        { Icon: Instagram, url: settings.instagramUrl || "#" },
+        { Icon: Facebook, url: settings.facebookUrl || "#" },
+        { Icon: Twitter, url: settings.twitterUrl || "#" },
+    ];
+
     return (
         <footer className="bg-secondary text-white pt-32 pb-16 relative overflow-hidden">
             {/* Background decorative elements */}
@@ -19,8 +50,8 @@ export default function Footer() {
                         Elevating the pilgrimage experience through excellence in service, rooted in the timeless values of hospitality and devotion. Providing trusted journeys since 2015.
                     </p>
                     <div className="flex gap-6">
-                        {[Instagram, Facebook, Twitter].map((Icon, i) => (
-                            <a key={i} href="#" className="p-3 rounded-xl bg-white/5 hover:bg-primary hover:text-secondary transition-all duration-500 border border-white/5">
+                        {socialLinks.map(({ Icon, url }, i) => (
+                            <a key={i} href={url} target={url !== "#" ? "_blank" : undefined} rel="noopener noreferrer" className="p-3 rounded-xl bg-white/5 hover:bg-primary hover:text-secondary transition-all duration-500 border border-white/5">
                                 <Icon size={20} />
                             </a>
                         ))}
@@ -80,13 +111,13 @@ export default function Footer() {
                             <div className="p-3 rounded-lg bg-white/5 text-primary border border-white/5">
                                 <Phone size={18} />
                             </div>
-                            <span className="text-white/60">+966 50 000 0000</span>
+                            <a href={`tel:${phone.replace(/\s/g, "")}`} className="text-white/60 hover:text-primary transition-colors">{phone}</a>
                         </li>
                         <li className="flex gap-4">
                             <div className="p-3 rounded-lg bg-white/5 text-primary border border-white/5">
                                 <Mail size={18} />
                             </div>
-                            <span className="text-white/60">info@alhudaservices.com</span>
+                            <a href={`mailto:${email}`} className="text-white/60 hover:text-primary transition-colors">{email}</a>
                         </li>
                     </ul>
                 </div>

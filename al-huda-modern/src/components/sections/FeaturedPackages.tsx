@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import GlassCard from "../ui/GlassCard";
 import Button from "../ui/Button";
@@ -7,31 +8,53 @@ import Link from "next/link";
 import SectionHeader from "../ui/SectionHeader";
 import Image from "next/image";
 
-const packages = [
-    {
-        title: "Makkah Ziyarat",
-        city: "Makkah",
-        desc: "A spiritual journey visiting historical sites around the Holy Masjid.",
-        img: "https://images.unsplash.com/photo-1542661957-d24b453eb553?auto=format&fit=crop&q=80",
-        href: "/ziyarat-packages/makkah",
-    },
-    {
-        title: "Madinah Ziyarat",
-        city: "Madinah",
-        desc: "Experience the tranquility of Masjid an-Nabawi and historical battlefields.",
-        img: "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80",
-        href: "/ziyarat-packages/madinah",
-    },
-    {
-        title: "Taif Day Trip",
-        city: "Taif",
-        desc: "Discover the rose farms and historical architecture of the City of Roses.",
-        img: "https://images.unsplash.com/photo-1534008757030-2679aa4352a3?auto=format&fit=crop&q=80",
-        href: "/ziyarat-packages/taif",
-    },
-];
+interface ZiyaratPackage {
+    id: string;
+    name: string;
+    city: string;
+    duration: string;
+    price: number;
+    currency: string;
+    itinerary: string;
+    images?: string;
+    isActive: boolean;
+}
+
+const cityImages: Record<string, string> = {
+    Makkah: "https://images.unsplash.com/photo-1542661957-d24b453eb553?auto=format&fit=crop&q=80",
+    Madinah: "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80",
+    Badr: "https://images.unsplash.com/photo-1582233221943-42e0591b658a?auto=format&fit=crop&q=80",
+    Taif: "https://images.unsplash.com/photo-1534008757030-2679aa4352a3?auto=format&fit=crop&q=80",
+};
+
+function getImage(pkg: ZiyaratPackage) {
+    if (pkg.images) {
+        try {
+            const imgs = JSON.parse(pkg.images);
+            if (Array.isArray(imgs) && imgs.length > 0) return imgs[0];
+        } catch { /* ignore */ }
+    }
+    return cityImages[pkg.city] || cityImages.Makkah;
+}
 
 export default function FeaturedPackages() {
+    const [packages, setPackages] = useState<ZiyaratPackage[]>([]);
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        fetch("/api/packages")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setPackages(data.data.filter((p: ZiyaratPackage) => p.isActive).slice(0, 3));
+                }
+            })
+            .catch(console.error)
+            .finally(() => setLoaded(true));
+    }, []);
+
+    if (loaded && packages.length === 0) return null; // don't show section if no packages
+
     return (
         <section className="py-32 bg-background relative overflow-hidden">
             <div className="container mx-auto px-6">
@@ -56,50 +79,57 @@ export default function FeaturedPackages() {
                     </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    {packages.map((pkg, index) => (
-                        <motion.div
-                            key={pkg.title}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1, duration: 0.8 }}
-                            viewport={{ once: true }}
-                        >
-                            <GlassCard className="p-0 overflow-hidden flex flex-col h-full group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(212,175,55,0.15)]">
-                                <div className="h-72 overflow-hidden relative">
-                                    <motion.div
-                                        whileHover={{ scale: 1.05 }}
-                                        transition={{ duration: 0.8 }}
-                                        className="relative h-full w-full"
-                                    >
-                                        <Image
-                                            src={pkg.img}
-                                            alt={pkg.title}
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 100vw, 33vw"
-                                        />
-                                    </motion.div>
-                                    <div className="absolute top-6 right-6 glass-premium px-4 py-2 rounded-full">
-                                        <span className="text-primary font-bold text-[10px] uppercase tracking-widest">{pkg.city}</span>
+                {!loaded ? (
+                    <div className="text-center py-12">
+                        <div className="inline-block w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        {packages.map((pkg, index) => (
+                            <motion.div
+                                key={pkg.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1, duration: 0.8 }}
+                                viewport={{ once: true }}
+                            >
+                                <GlassCard className="p-0 overflow-hidden flex flex-col h-full group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(212,175,55,0.15)]">
+                                    <div className="h-72 overflow-hidden relative">
+                                        <motion.div
+                                            whileHover={{ scale: 1.05 }}
+                                            transition={{ duration: 0.8 }}
+                                            className="relative h-full w-full"
+                                        >
+                                            <Image
+                                                src={getImage(pkg)}
+                                                alt={pkg.name}
+                                                fill
+                                                className="object-cover"
+                                                sizes="(max-width: 768px) 100vw, 33vw"
+                                            />
+                                        </motion.div>
+                                        <div className="absolute top-6 right-6 glass-premium px-4 py-2 rounded-full">
+                                            <span className="text-primary font-bold text-[10px] uppercase tracking-widest">{pkg.city}</span>
+                                        </div>
+                                        <div className="absolute inset-0 bg-linear-to-t from-secondary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                     </div>
-                                    <div className="absolute inset-0 bg-linear-to-t from-secondary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                </div>
-                                <div className="p-10 flex flex-col flex-1">
-                                    <h3 className="text-2xl font-bold font-amiri mb-4 text-secondary group-hover:text-primary transition-colors">{pkg.title}</h3>
-                                    <p className="text-gray-500 text-sm mb-8 line-clamp-2 leading-relaxed">
-                                        {pkg.desc}
-                                    </p>
-                                    <Link href={pkg.href} className="mt-auto">
-                                        <Button variant="ghost" className="px-0 text-primary font-bold flex items-center gap-3 group/btn text-[10px] uppercase tracking-[0.2em]">
-                                            Details <span className="group-hover/btn:translate-x-2 transition-transform">→</span>
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </GlassCard>
-                        </motion.div>
-                    ))}
-                </div>
+                                    <div className="p-10 flex flex-col flex-1">
+                                        <h3 className="text-2xl font-bold font-amiri mb-4 text-secondary group-hover:text-primary transition-colors">{pkg.name}</h3>
+                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2 leading-relaxed">
+                                            {pkg.itinerary}
+                                        </p>
+                                        <p className="text-primary font-bold mb-6">{pkg.price} {pkg.currency}</p>
+                                        <Link href="/ziyarat-packages" className="mt-auto">
+                                            <Button variant="ghost" className="px-0 text-primary font-bold flex items-center gap-3 group/btn text-[10px] uppercase tracking-[0.2em]">
+                                                Details <span className="group-hover/btn:translate-x-2 transition-transform">→</span>
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </GlassCard>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
 
                 <motion.div
                     initial={{ opacity: 0 }}

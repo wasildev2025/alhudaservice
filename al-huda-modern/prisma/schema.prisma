@@ -127,6 +127,20 @@ model PackageInquiry {
   updatedAt DateTime @updatedAt
 }
 
+// ─── Khajoor Products (admin-managed catalog) ───────────────
+model KhajoorProduct {
+  id          String  @id @default(cuid())
+  name        String // Ajwa Al-Madinah, Safawi, etc.
+  description String  @db.Text
+  price       String // "From 60 SAR / kg"
+  image       String? // URL or uploaded path
+  popular     Boolean @default(false)
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // ─── Bulk Khajoor Inquiry ────────────────────────────────────
 model KhajoorInquiry {
   id           String  @id @default(cuid())
@@ -143,12 +157,13 @@ model KhajoorInquiry {
   updatedAt DateTime @updatedAt
 }
 
-// ─── Contact Messages ────────────────────────────────────────
+// ─── Contact Messages / Requests ─────────────────────────────
 model ContactMessage {
   id           String @id @default(cuid())
   name         String
   emailOrPhone String
   message      String @db.Text
+  category     String @default("General") // General, Donation, Ziyarat Custom, Feedback
   status       String @default("UNREAD") // UNREAD | READ | REPLIED
 
   createdAt DateTime @default(now())
@@ -157,12 +172,22 @@ model ContactMessage {
 
 // ─── App Settings (singleton row) ────────────────────────────
 model AppSettings {
-  id             String  @id @default(cuid())
-  contactPhone   String?
-  whatsappNumber String?
-  contactEmail   String?
-  workingHours   String?
-  featuredItems  String? @db.Text // JSON
+  id              String  @id @default(cuid())
+  contactPhone    String?
+  whatsappNumber  String?
+  contactEmail    String?
+  workingHours    String?
+  featuredItems   String? @db.Text // JSON
+  siteTitle       String?
+  siteDescription String? @db.Text
+  sallaStoreUrl     String?
+  sallaBooksUrl     String?
+  sallaDatesUrl     String?
+  sallaDonationsUrl String?
+  facebookUrl     String?
+  instagramUrl    String?
+  twitterUrl      String?
+  tiktokUrl       String?
 
   updatedAt DateTime @updatedAt
 }
