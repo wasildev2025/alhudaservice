@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 
 // Magic bytes for allowed image types
 const MAGIC_BYTES: { [key: string]: number[] } = {
@@ -68,22 +67,21 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Generate safe filename
+        // Generate safe filename prefix
         const ext = sanitizeFilename(file.name.split(".").pop() || "jpg");
         const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-        // Ensure uploads directory exists
-        const uploadDir = path.join(process.cwd(), "public", "uploads");
-        await mkdir(uploadDir, { recursive: true });
+        // Upload to Vercel Blob
+        // Note: This automatically uses process.env.BLOB_READ_WRITE_TOKEN
+        const blob = await put(filename, buffer, {
+            access: 'public',
+            contentType: file.type,
+        });
 
-        const filepath = path.join(uploadDir, filename);
-        await writeFile(filepath, buffer);
-
-        const publicUrl = `/uploads/${filename}`;
-
+        // Return the absolute public URL provided by Vercel
         return NextResponse.json({
             success: true,
-            url: publicUrl,
+            url: blob.url,
         });
     } catch (error) {
         console.error("Upload error:", error);
