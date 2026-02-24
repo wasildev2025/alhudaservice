@@ -26,14 +26,24 @@ export default auth((req: any) => {
     const { pathname } = req.nextUrl;
     const method = req.method;
 
+    const response = NextResponse.next();
+
+    // 1. Inject Strict Edge Security Headers
+    response.headers.set('X-DNS-Prefetch-Control', 'on');
+    response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    response.headers.set('X-XSS-Protection', '1; mode=block');
+    response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('Referrer-Policy', 'origin-when-cross-origin');
+
     // Only protect /api/ routes
     if (!pathname.startsWith("/api/")) {
-        return NextResponse.next();
+        return response;
     }
 
     // Allow public API routes
     if (isPublicApiRoute(pathname, method)) {
-        return NextResponse.next();
+        return response;
     }
 
     // Everything else requires ADMIN session
@@ -42,20 +52,23 @@ export default auth((req: any) => {
     if (!session?.user) {
         return NextResponse.json(
             { success: false, message: "Unauthorized – please log in" },
-            { status: 401 }
+            { status: 401, headers: response.headers }
         );
     }
 
     if (session.user.role !== "ADMIN") {
         return NextResponse.json(
             { success: false, message: "Forbidden – admin access required" },
-            { status: 403 }
+            { status: 403, headers: response.headers }
         );
     }
 
-    return NextResponse.next();
+    return response;
 });
 
 export const config = {
-    matcher: ["/api/:path*"],
+    matcher: [
+        // Match all paths so security headers apply globally, not just /api
+        "/((?!_next/static|_next/image|favicon.ico).*)",
+    ],
 };

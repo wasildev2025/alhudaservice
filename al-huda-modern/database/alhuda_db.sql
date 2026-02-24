@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `VerificationToken` (
   `identifier` VARCHAR(191) NOT NULL,
   `token` VARCHAR(191) NOT NULL,
   `expires` DATETIME(3) NOT NULL,
-  UNIQUE KEY `VerificationToken_identifier_token_key` (`identifier`, `token`)
+  PRIMARY KEY (`identifier`, `token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================

@@ -19,6 +19,8 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  pickDropBookings PickDropBooking[]
+  packageInquiries PackageInquiry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -104,8 +106,15 @@ model PickDropBooking {
   notes          String?  @db.Text
   status         String   @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED
 
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([date])
+  @@index([userId])
 }
 
 // ─── Ziyarat Package Inquiry ─────────────────────────────────
@@ -123,8 +132,15 @@ model PackageInquiry {
   packageId String
   package   ZiyaratPackage @relation(fields: [packageId], references: [id])
 
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([packageId])
+  @@index([userId])
 }
 
 // ─── Khajoor Products (admin-managed catalog) ───────────────
@@ -133,7 +149,7 @@ model KhajoorProduct {
   name        String // Ajwa Al-Madinah, Safawi, etc.
   description String  @db.Text
   price       String // Display label: "From 60 SAR / kg"
-  priceAmount Float?  // Numeric price for sorting/filtering
+  priceAmount Float   @default(0)  // Numeric price for sorting/cart calculations
   currency    String  @default("SAR") // SAR, USD, EUR
   unit        String  @default("kg") // kg, box, pack, piece
   image       String? // URL or uploaded path
@@ -142,6 +158,8 @@ model KhajoorProduct {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([isActive])
 }
 
 // ─── Bulk Khajoor Inquiry ────────────────────────────────────
